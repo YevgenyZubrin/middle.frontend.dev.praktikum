@@ -1,0 +1,54 @@
+body, p {
+  margin: 0;
+}
+
+.profile {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  &__container {
+    width: 100%;
+    max-width: 510px;
+  }
+
+  &__button {
+    width: 100%;
+    padding: 10px 0 !important;
+
+    text-align: left;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #EAEAEA !important;
+    }
+
+    &_red {
+      color: #F00 !important;
+
+      &:hover {
+        color: #c00909 !important;
+      }
+    }
+  }
+
+  &__avatar-wrapper {
+    position: relative;
+  }
+
+  &__name {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+  
+    margin: 0;
+  
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+  }
+}

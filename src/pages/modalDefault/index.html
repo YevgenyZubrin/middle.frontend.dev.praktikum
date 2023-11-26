@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.scss">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    {{#> modal/modal className='modal' isOpen=true}}
+      <h2 class="modal__title">Загрузите файл</h2>
+      {{> button/button className='modal__choose-file-button' text='Выбрать файл на компьютере'}}
+      {{> button/button filled=true className='modal__change-button' text='Поменять'}}
+      <a href="/">на главную</a>
+    {{/modal/modal}}
+  </main>
+</body>
+</html>

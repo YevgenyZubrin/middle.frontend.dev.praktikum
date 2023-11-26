@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="/src/partials/field/field.scss" />
+<div class="field{{#if isProfile}} field_profile{{/if}} {{className}}">
+  <label class="field__label" for={{id}}>
+    {{labelText}}
+  </label>
+  <input value={{value}} class="field__input" id={{id}} type={{type}} {{#if disabled}}disabled{{/if}} />
+  {{#if message.text}}
+    <p class="field__message {{message.type}}">{{message.text}}</p>
+  {{/if}}
+</div>
