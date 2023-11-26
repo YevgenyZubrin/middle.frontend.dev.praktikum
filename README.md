@@ -9,6 +9,9 @@ npm run build
 Сборка проекта и запуск EXPRESS:
 npm run start
 
+Ссылка на Netlify:
+https://darling-licorice-e036fc.netlify.app/
+
 Реализованные страницы:
 http://localhost:5173/src/pages/profile/index.html
 http://localhost:5173/src/pages/modalDefault/index.html
