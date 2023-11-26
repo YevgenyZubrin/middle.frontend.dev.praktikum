@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.scss">
+  <title>Профиль</title>
+</head>
+<body>
+  <main>
+    <section class="profile">
+      {{> backLink/backLink}}
+      <section class="profile__container">
+        <div class="profile__avatar-wrapper {{className}}">
+          {{> avatar/avatar withAvatarChanging=true}}
+          <h1 class="profile__name">{{first_name}}</h1>
+        </div>
+  
+        <form>
+          {{#each profileFields}}
+            {{> field/field isProfile=true disabled=this.disabled value=this.value labelText=this.labelText id=this.id type=this.type}}
+          {{/each}}
+        </form>
+  
+        <div class="profile__buttons">
+          {{> button/button className='profile__button' text='Изменить данные'}}
+          {{> button/button className='profile__button' text='Изменить пароль'}}
+          {{> button/button className='profile__button profile__button_red' text='Выйти'}}
+        </div>
+      </section>
+    </section>
+  </main>
+
+
+  <script src="index.js"></script>
+</body>
+</html>
