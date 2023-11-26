@@ -1,0 +1,59 @@
+.button {
+  display: block;
+  padding: 0;
+  
+  cursor: pointer;
+  border: none;
+  color: #3369f3;
+  background-color: transparent;
+
+  &:hover {
+    color: #033ed5;
+  }
+
+  &:active {
+    color: #0434af;
+  }
+
+  &_filled {
+    padding: 12px;
+
+    background-color: #3369f3;
+    color: white;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #033ed5;
+      color: white;
+    }
+
+    &:active {
+      background-color: #0434af;
+      color: white;
+    }
+  }
+}
+
+// .filled {
+//   &.button {
+//     padding: 12px;
+
+//     background-color: #3369f3;
+//     color: white;
+//     border-radius: 8px;
+//   }
+
+//   &:hover {
+//     &.button {
+//       background-color: #033ed5;
+//       color: white;
+//     }
+//   }
+
+//   &:active {
+//     &.button {
+//       background-color: #0434af;
+//       color: white;
+//     }
+//   }
+// }
