@@ -4,7 +4,7 @@
   margin: 0 auto;
 
   border-radius: 100%;
-  background-color: #EFEFEF;
+  background-color: $gray-20;
   background-image: url('../../public/images/svg/empty.svg');
   background-repeat: no-repeat;
   background-position: center center;
@@ -22,8 +22,8 @@
     cursor: pointer;
   
     border: none;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: $black;
+    color: $white;
     font-size: 14px;
     line-height: 14px;
     opacity: 0.5;

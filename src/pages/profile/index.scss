@@ -23,14 +23,18 @@ body, p {
     text-align: left;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #EAEAEA !important;
+      border-bottom: 1px solid $gray-30 !important;
     }
 
     &_red {
-      color: #F00 !important;
+      color: $red-10 !important;
 
       &:hover {
-        color: #c00909 !important;
+        color: $red-20 !important;
+      }
+
+      &:active {
+        color: $red-30 !important;
       }
     }
   }

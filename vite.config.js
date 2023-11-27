@@ -29,6 +29,13 @@ export default defineConfig({
       partialDirectory: [resolve(__dirname, "src/partials")],
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "${__dirname}/src/public/styles/vars.scss";`
+      }
+    }
+  },
   build: {
     outDir: resolve(__dirname, "build"),
     rollupOptions: {
