@@ -1,0 +1,33 @@
+body, p {
+  margin: 0;
+}
+
+.profile {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  &__container {
+    width: 510px;
+  }
+
+  &__button-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__save-button {
+    width: max-content !important;
+    padding: 12px 70px !important;
+
+    text-align: center !important;
+  }
+
+  &__image-wrapper {
+    position: relative;
+  }
+}

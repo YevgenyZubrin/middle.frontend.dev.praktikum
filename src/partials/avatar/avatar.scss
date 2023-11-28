@@ -1,0 +1,35 @@
+.avatar {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto;
+
+  border-radius: 100%;
+  background-color: $gray-20;
+  background-image: url('../../public/images/svg/empty.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin-bottom: 90px;
+
+  &__change-button {
+    position: absolute;
+  
+    display: none;
+    padding: 0 20px;
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+  
+    cursor: pointer;
+  
+    border: none;
+    background-color: $black;
+    color: $white;
+    font-size: 14px;
+    line-height: 14px;
+    opacity: 0.5;
+  }
+
+  &:hover &__change-button {
+    display: block;
+  }
+}
