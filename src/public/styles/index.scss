@@ -1,4 +1,10 @@
 .links {
   display: flex;
   flex-direction: column;
+
+  &__list {
+    li {
+      list-style: none;
+    }
+  }
 }

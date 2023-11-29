@@ -4,56 +4,32 @@
   
   cursor: pointer;
   border: none;
-  color: #3369f3;
+  color: $blue-10;
   background-color: transparent;
 
   &:hover {
-    color: #033ed5;
+    color: $blue-20;
   }
 
   &:active {
-    color: #0434af;
+    color: $blue-30;
   }
 
   &_filled {
     padding: 12px;
 
-    background-color: #3369f3;
+    background-color: $blue-10;
     color: white;
     border-radius: 8px;
 
     &:hover {
-      background-color: #033ed5;
+      background-color: $blue-20;
       color: white;
     }
 
     &:active {
-      background-color: #0434af;
+      background-color: $blue-30;
       color: white;
     }
   }
 }
-
-// .filled {
-//   &.button {
-//     padding: 12px;
-
-//     background-color: #3369f3;
-//     color: white;
-//     border-radius: 8px;
-//   }
-
-//   &:hover {
-//     &.button {
-//       background-color: #033ed5;
-//       color: white;
-//     }
-//   }
-
-//   &:active {
-//     &.button {
-//       background-color: #0434af;
-//       color: white;
-//     }
-//   }
-// }

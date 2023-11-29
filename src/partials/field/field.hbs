@@ -3,7 +3,7 @@
   <label class="field__label" for={{id}}>
     {{labelText}}
   </label>
-  <input value={{value}} class="field__input" id={{id}} type={{type}} {{#if disabled}}disabled{{/if}} />
+  <input value={{value}} class="field__input" id={{id}} name={{id}} type={{type}} {{#if disabled}}disabled{{/if}} />
   {{#if message.text}}
     <p class="field__message {{message.type}}">{{message.text}}</p>
   {{/if}}
