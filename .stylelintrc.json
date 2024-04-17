@@ -1,0 +1,17 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
+    "no-empty-source": null,
+    "block-no-empty": null,
+    "no-missing-end-of-source-newline": true,
+    "declaration-block-trailing-semicolon": "always"
+  },
+  "ignoreFiles": [
+    "build/*"
+  ]
+} 
