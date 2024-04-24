@@ -1,0 +1,78 @@
+.item {
+  p {
+    padding: 0;
+    margin: 0;
+  }
+
+  box-sizing: border-box;
+  display: flex;
+  height: 70px;
+  padding: 12px 8px;
+  cursor: pointer;
+  border-top: 1px solid $gray-30;
+  list-style: none;
+
+  &:last-child {
+    border-bottom: 1px solid $gray-30;
+  }
+
+  &_choosed {
+    background-color: $blue;
+  }
+
+  &__column {
+    height: 100%;
+
+    &_first {
+      margin-right: 8px;
+    }
+
+    &_third {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-direction: column;
+      margin-left: auto;
+    }
+  }
+
+  &__avatar {
+    display: block;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    background-color: $gray-30;
+    background-image: url('../../public/images/avatar.png');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  &__name {
+    margin: 0;
+  }
+
+  &__last-message {
+    color: $gray-50;
+  }
+
+  &__time {
+    font-size: 10px;
+    line-height: 14px;
+    color: $gray-50;
+  }
+
+  &__amount-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    background-color: $blue-10;
+    border-radius: 100%;
+  }
+
+  &__message-amount {
+    color: $white;
+  }
+}

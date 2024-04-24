@@ -1,0 +1,30 @@
+.chat-header {
+  height: 45px;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid $gray-30;
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__image {
+    margin-right: 16px;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

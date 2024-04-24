@@ -1,0 +1,8 @@
+export { default as MenuIcon } from './MenuIcon'
+export { default as SendMessageIcon } from './SendMessageIcon'
+export { default as ShareFileIcon } from './ShareFileIcon'
+export { default as MediaIcon } from './MediaIcon'
+export { default as FileIcon } from './FileIcon'
+export { default as LocationIcon } from './LocationIcon'
+export { default as PlusIcon } from './PlusIcon'
+export { default as CrossIcon } from './CrossIcon'

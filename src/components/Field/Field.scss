@@ -1,0 +1,57 @@
+.field {
+  position: relative;
+  text-align: left;
+  margin-bottom: 16px;
+
+  &__label {
+    position: absolute;
+    font-size: 10px;
+    line-height: 10px;
+    color: $gray-50;
+  }
+
+  &__input {
+    width: 100%;
+    padding-top: 16px;
+    padding-bottom: 8px;
+    border: none;
+    border-bottom: 1px solid $blue-10;
+    outline: none;
+  }
+
+  &__message {
+    margin-top: 8px;
+    font-size: 10px;
+    line-height: 10px;
+  
+    &.error {
+      color: $red-10;
+    }
+  }
+
+  &_profile {
+    .field__input {
+      width: 100%;
+      padding: 8px 0;
+      text-align: right;
+      border: none;
+      border-bottom: 1px solid $gray-30;
+      outline: none;
+      font-size: 14px;
+      line-height: 14px;
+      color: $gray-50;
+    
+      &:disabled {
+        background-color: transparent;
+      }
+    }
+
+    .field__label {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      line-height: 14px;
+    }
+  }
+}
