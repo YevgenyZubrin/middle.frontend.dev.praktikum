@@ -1,47 +1,21 @@
 import Block from '../../core/Block'
-import { Button, Field } from '../../components'
-import { getComponentsList } from '../../utils'
+import { Button } from '../../components'
+import { FormSignUp } from '../../components/FormSignUp'
+import { FormSignIn } from '../../components/FormSignIn'
+import { getValidationResult } from '../../utils'
+import { LoginProps } from './interface'
+import getName from '../../utils/getName'
 
 export default class Login extends Block {
-  constructor(props) {
-    const signUpFields = getComponentsList(
-      props.signUpFields,
-      Field,
-      {
-        onBlur: (e) => {
-          console.log(e)
-        },
-      },
-    )
-
+  constructor(props: LoginProps) {
     super({
       ...props,
-      SubmitButton: new Button({
-        filled: true,
-        text: 'Авторизоваться',
-        className: 'login__submit',
-        onClick: (e) => {
-          e.preventDefault()
-          console.log({
-            login: this.children.LoginField,
-            password: this.children.PasswordField.value,
-          })
-        },
-      }),
       AddAccountButton: new Button({
         filled: false,
         text: 'Нет аккаунта?',
         onClick: () => {
           this.setProps({ isRegistration: true })
         },
-      }),
-      SignUpButton: new Button({
-        filled: true,
-        text: 'Зарегистрироваться',
-        className: 'login__submit',
-        // onClick: () => {
-        //   this.setProps({ isRegistration: true })
-        // },
       }),
       SignInButton: new Button({
         filled: false,
@@ -50,36 +24,41 @@ export default class Login extends Block {
           this.setProps({ isRegistration: false })
         },
       }),
-      LoginField: new Field({
-        onBlur: (e) => { this.validateField(e) },
-        id: 'login',
-        labelText: 'Логин',
-        type: 'text',
-        disabled: false,
-        value: 'lol',
+      FormSignUp: new FormSignUp({
+        onSubmit: (e) => {
+          const fields = this.children.FormSignUp.children.SignUpFields.children
+          this.onSubmitValidation(e, fields)
+        },
       }),
-      PasswordField: new Field({
-        id: 'password',
-        labelText: 'Пароль',
-        type: 'password',
-        disabled: false,
+      FormSignIn: new FormSignIn({
+        onSubmit: (e) => {
+          const fields = this.children.FormSignIn.children
+          this.onSubmitValidation(e, fields)
+        },
       }),
-      signUpFieldsKeys: Object.keys(signUpFields),
-      ...signUpFields,
     })
   }
 
-  validateField(e) {
-    if (e.target.value === 'err') {
-      this.children.LoginField.setProps({
-        message: {
-          text: 'Неверный логин',
-          type: 'error',
-        },
+  onSubmitValidation(e, fields) {
+    e.preventDefault()
+    const validationResultList = e.target !== null ? getValidationResult(e.target) : []
+
+    if (!validationResultList.length) {
+      this.setProps({
+        editProfileMode: false,
+        editPasswordMode: false,
       })
     } else {
-      this.children.LoginField.setProps({
-        message: {},
+      validationResultList.forEach((item) => {
+        const [fieldName, errorText] = Object.entries(item).flat()
+        const componentName = getName(fields, fieldName)
+
+        fields[componentName].setProps({
+          message: {
+            text: errorText,
+            type: 'error',
+          },
+        })
       })
     }
   }
@@ -92,11 +71,7 @@ export default class Login extends Block {
           {{#if isRegistration}}
             <h1 class="login__title">Регистрация</h1>
 
-            <form>
-              ${this.props.signUpFieldsKeys.map((key) => `{{{ ${key} }}}`).join('')}
-
-              {{{ SignUpButton }}}
-            <form>
+            {{{ FormSignUp }}}
 
             <div class="login__button-wrapper">
               {{{ SignInButton }}}
@@ -104,19 +79,13 @@ export default class Login extends Block {
           {{else}}
             <h1 class="login__title">Вход</h1>
 
-            <form>
-              {{{ LoginField }}}
-              {{{ PasswordField }}}
-
-              {{{ SubmitButton }}}
-            </form>
+            {{{ FormSignIn }}}
 
             <div class="login__button-wrapper">
               {{{ AddAccountButton }}}
             </div>
           {{/if}}
         </section>
-        <a href="/">На главную</a>
       </section>`
   }
 }

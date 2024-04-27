@@ -1,4 +1,4 @@
-import { Input } from '../../components/Input'
+import { Input } from '../Input'
 import Block from '../../core/Block'
 
 export default class Field extends Block {
@@ -16,14 +16,16 @@ export default class Field extends Block {
   }
 
   render() {
-    return `<div class="field{{#if isProfile}} field_profile{{/if}} {{className}}">
-              <label class="field__label" for={{id}}>
-                {{labelText}}
-              </label>
-              {{{ Input }}}
-              {{#if message.text}}
-                <p class="field__message {{message.type}}">{{message.text}}</p>
-              {{/if}}
-            </div>`
+    return `
+      <div class="field{{#if isProfile}} field_profile{{/if}} {{className}}">
+        <label class="field__label" for={{id}}>
+          {{labelText}}
+        </label>
+        {{{ Input }}}
+        {{#if message.text}}
+          <p class="field__message {{message.type}}">{{message.text}}</p>
+        {{/if}}
+      </div>
+    `
   }
 }

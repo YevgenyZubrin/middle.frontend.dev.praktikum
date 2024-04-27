@@ -1,9 +1,9 @@
-/* eslint-disable */
-// @ts-nocheck
-
-import { nanoid } from 'nanoid'
 import Handlebars from 'handlebars'
+import { nanoid } from 'nanoid'
 import EventBus from './EventBus'
+
+type IChildren = Record<string, unknown[]>
+type IProps = Record<string, unknown[]>
 
 export default class Block {
   static EVENTS = {
@@ -11,29 +11,22 @@ export default class Block {
     FLOW_CDM: 'flow:component-did-mount',
     FLOW_CDU: 'flow:component-did-update',
     FLOW_RENDER: 'flow:render',
-  }
+  } as const
 
-  _element = null
+  private _element: Element | null = null
 
-  private meta = null
+  children: IChildren = {}
+
+  props: IProps = {}
+
+  private eventBus: () => EventBus<EVENTS>
+
+  // private meta = null
 
   _id = nanoid(6)
 
-  /** JSDoc
-     * @param {string} tagName
-     * @param {Object} props
-     *
-     * @returns {void}
-     */
-
-  private _eventbus
-
   constructor(propsWithChildren = {}) {
     const eventBus = new EventBus()
-    // this._meta = {
-    //   tagName,
-    //   props
-    // };
     const { props, children } = this.getChildrenAndProps(propsWithChildren)
     this.props = this.makePropsProxy({ ...props })
     this.children = children
@@ -56,7 +49,7 @@ export default class Block {
   private removeEvents() {
     const { events = {} } = this.props
 
-    if(this._element) {
+    if (this._element) {
       Object.keys(events).forEach((eventName) => {
         this._element.removeEventListener(eventName, events[eventName])
       })
@@ -70,10 +63,10 @@ export default class Block {
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this))
   }
 
-  private createResources() {
-    const { tagName } = this.meta
-    this._element = this.createDocumentElement(tagName)
-  }
+  // private createResources() {
+  //   const { tagName } = this.meta
+  //   this._element = this.createDocumentElement(tagName)
+  // }
 
   _init() {
     // this.createResources();
@@ -116,6 +109,7 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldTarget, newProps)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private getChildrenAndProps(propsAndChildren) {
     const children = {}
     const props = {}
@@ -147,30 +141,26 @@ export default class Block {
     this.removeEvents()
 
     const propsAndStubs = { ...this.props }
-// console.log({propsAndStubs})
+
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child._id}"></div>`
     })
 
-    const fragment = this.createDocumentElement('template')
+    const fragment = this.createDocumentElement('template') as HTMLTemplateElement
 
-    // console.log({render: this.render(), propsAndStubs})
     const template = Handlebars.compile(this.render())(propsAndStubs)
-
-    // console.log({template})
 
     fragment.innerHTML = template
 
     const newElement = fragment.content.firstElementChild
 
     Object.values(this.children).forEach((child) => {
-      // console.log(child)
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`)
 
       stub?.replaceWith(child.getContent())
     })
 
-    if (this._element) {
+    if (this._element && newElement) {
       this._element.replaceWith(newElement)
     }
 
@@ -211,16 +201,25 @@ export default class Block {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private createDocumentElement(tagName) {
-    // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
+  private createDocumentElement(tagName: string): HTMLElement | HTMLTemplateElement {
+    if (tagName === 'template') {
+      return document.createElement(tagName) as HTMLTemplateElement
+    }
+
     return document.createElement(tagName)
   }
 
   show() {
-    this.getContent().style.display = 'block'
+    const content = this.getContent() as HTMLElement
+    if (content !== null) {
+      content.style.display = 'block'
+    }
   }
 
   hide() {
-    this.getContent().style.display = 'none'
+    const content = this.getContent() as HTMLElement
+    if (content !== null) {
+      content.style.display = 'none'
+    }
   }
 }

@@ -1,45 +1,24 @@
-// @ts-nocheck
-
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Handlebars from 'handlebars'
 import { ChangeAvatarModal } from '../../components/ChangeAvatarModal'
 import Block from '../../core/Block'
-import { getComponentsList } from '../../utils'
 import {
-  Field,
   Button,
   BackLink,
   Avatar,
   Modal,
 } from '../../components'
+import { ProfileFields } from '../../components/ProfileFields'
+import { Form } from '../../components/Form'
+import { ChangeProfileForm } from '../../components/ChangeProfileForm'
+import { ChangePasswordForm } from '../../components/ChangePasswordForm'
+import { formSubmit, getValidationResult } from '../../utils'
+import getName from '../../utils/getName'
 
-Handlebars.registerHelper('or', (...args) => {
-  // Последний элемент в args — это объект options, его нужно исключить
-  const options = args.pop()
-  return args.some(Boolean)
-})
+Handlebars.registerHelper('neither', (a, b) => !a && !b)
 
 export default class Profile extends Block {
   constructor(props) {
-    const profileFieldComponents = getComponentsList(
-      props.profileFields,
-      Field,
-      {
-        onBlur: (e) => {
-          console.log('blur', e.target.value)
-        },
-      },
-    )
-
-    const changePassworlFieldComponents = getComponentsList(
-      props.changePasswordFields,
-      Field,
-      {
-        onBlur: (e) => {
-          console.log('blur', e.target.value)
-        },
-      },
-    )
-
     super({
       ...props,
       ChangePasswordButton: new Button({
@@ -60,17 +39,6 @@ export default class Profile extends Block {
         className: 'profile__button profile__button_red',
         text: 'Выйти',
       }),
-      SaveButton: new Button({
-        filled: true,
-        text: 'Сохранить',
-        className: 'profile__save-button',
-        onClick: () => {
-          this.setProps({
-            editProfileMode: false,
-            editPasswordMode: false,
-          })
-        },
-      }),
       BackLink: new BackLink({}),
       Avatar: new Avatar({
         changeAvatar: () => {
@@ -86,11 +54,46 @@ export default class Profile extends Block {
         }),
         className: 'profile__modal',
       }),
-      profileFieldComponentsKeys: Object.keys(profileFieldComponents),
-      changePassworlFieldComponentsKeys: Object.keys(changePassworlFieldComponents),
-      ...changePassworlFieldComponents,
-      ...profileFieldComponents,
+      ProfileFields: new ProfileFields({}),
+      ChangeProfileForm: new ChangeProfileForm({
+        onSubmit: (e: Event) => {
+          const fields = this.children.ChangeProfileForm.children.ProfileFields.children
+          this.onSubmitValidation(e, fields)
+        },
+      }),
+      ChangePasswordForm: new Form({
+        formChildren: new ChangePasswordForm({
+          onSubmit: (e) => {
+            const fields = this.children.ChangePasswordForm.children.formChildren.children
+            this.onSubmitValidation(e, fields)
+          },
+        }),
+      }),
     })
+  }
+
+  onSubmitValidation(e, fields) {
+    e.preventDefault()
+    const validationResultList = e.target !== null ? getValidationResult(e.target) : []
+
+    if (!validationResultList.length) {
+      this.setProps({
+        editProfileMode: false,
+        editPasswordMode: false,
+      })
+    } else {
+      validationResultList.forEach((item) => {
+        const [fieldName, errorText] = Object.entries(item).flat()
+        const componentName = getName(fields, fieldName)
+
+        fields[componentName].setProps({
+          message: {
+            text: errorText,
+            type: 'error',
+          },
+        })
+      })
+    }
   }
 
   render() {
@@ -107,20 +110,16 @@ export default class Profile extends Block {
 
           </div>
 
-          <form>
-            {{#if editPasswordMode}}
-              ${this.props.changePassworlFieldComponentsKeys.map((key) => `{{{ ${key} }}}`).join('')}
-            {{else}}
-              ${this.props.profileFieldComponentsKeys.map((key) => `{{{ ${key} }}}`).join('')}
-            {{/if}}
-          </form>
+          {{#if editPasswordMode}}
+            {{{ ChangePasswordForm }}}
+          {{/if}}
 
+          {{#if editProfileMode}}
+            {{{ ChangeProfileForm }}}
+          {{/if}}
           
-          {{#if (or editPasswordMode editProfileMode)}}
-            <div class="profile__button-wrapper">
-              {{{ SaveButton }}}
-            </div>
-          {{else}}
+          {{#if (neither editPasswordMode editProfileMode)}}
+            {{{ ProfileFields }}}
             <div>
               {{{ ChangePasswordButton }}}
               {{{ ChangeDataButton }}}

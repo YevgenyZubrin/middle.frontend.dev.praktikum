@@ -18,7 +18,7 @@ export default class Messages extends Block {
 
   render() {
     return `
-      <div class="">
+      <div>
         ${this.props.messagesKeys.map((key) => `{{{ ${key} }}}`).join('')}
       </div>
     `

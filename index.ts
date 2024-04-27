@@ -1,18 +1,11 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Handlebars from 'handlebars'
-// import button from './src/partials/button/button.hbs'
 import * as Pages from './src/pages'
-import profileFields from './src/public/constants/profileFields'
-import changePasswordFields from './src/public/constants/changePasswordFields'
-import signUpFields from './src/public/constants/signUpFields'
-import chatList from './src/public/constants/chatList'
+import { chatList } from './src/public/constants'
 
 const pages = {
-  login: [Pages.LoginPage, { signUpFields }],
+  login: [Pages.LoginPage],
   profile: [Pages.ProfilePage, {
     firstName: 'Ивашка',
-    profileFields,
-    changePasswordFields,
     editProfileMode: false,
     editPasswordMode: false,
   }],
@@ -26,31 +19,29 @@ const pages = {
 }
 
 function navigate(page: string) {
-  // @ts-ignore
-  const [source, context] = pages[page]
+  const [Source, context] = pages[page]
   const container = document.getElementById('app')!
 
-  if (source instanceof Object) {
-    const somePage = new source(context)
+  if (Source instanceof Object) {
+    const somePage = new Source(context)
     container.innerHTML = ''
     container.append(somePage.getContent())
-    // page.dispatchComponentDidMount();
     return
   }
 
-  container.innerHTML = Handlebars.compile(source)(context)
+  container.innerHTML = Handlebars.compile(Source)(context)
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('chats')) // в конце заменить на 'nav'
+document.addEventListener('DOMContentLoaded', () => navigate('nav'))
 
-document.addEventListener('click', (e) => {
-  // @ts-ignore
-  const page = e.target.getAttribute('page')
-  if (page) {
-    console.log('click somewhere', page)
-    navigate(page)
+document.addEventListener('click', (e: Event) => {
+  if (e.target instanceof HTMLElement) {
+    const page = e.target.getAttribute('page')
+    if (page) {
+      navigate(page)
 
-    e.preventDefault()
-    e.stopImmediatePropagation()
+      e.preventDefault()
+      e.stopImmediatePropagation()
+    }
   }
 })

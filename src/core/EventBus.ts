@@ -1,35 +1,30 @@
-/* eslint-disable */
-// @ts-nocheck
+class EventBus<E extends string> {
+  listeners: {[key in E]?: Function[]} = {}
 
-class EventBus {
-  constructor() {
-    this.listeners = {}
-  }
-
-  on(event, callback) {
+  on<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
     if (!this.listeners[event]) {
       this.listeners[event] = []
     }
 
-    this.listeners[event].push(callback)
+    this.listeners[event]!.push(callback)
   }
 
-  off(event, callback) {
+  off<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }
 
-    this.listeners[event] = this.listeners[event].filter(
+    this.listeners[event] = this.listeners[event]!.filter(
       (listener) => listener !== callback,
     )
   }
 
-  emit(event, ...args) {
+  emit<F extends(...args: any) => void>(event: E, ...args: Parameters<F>) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }
 
-    this.listeners[event].forEach((listener) => {
+    this.listeners[event]!.forEach((listener) => {
       listener(...args)
     })
   }

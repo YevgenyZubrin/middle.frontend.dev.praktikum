@@ -1,8 +1,9 @@
 import Block from '../../core/Block'
+import { formSubmit } from '../../utils'
 import { FileTypeMenu } from '../FileTypeMenu'
+import { FormMessage } from '../FormMessage'
 import { IconButton } from '../IconButton'
-import { SendMessageIcon, ShareFileIcon } from '../Icons'
-import { Input } from '../Input'
+import { ShareFileIcon } from '../Icons'
 
 export default class ChatFooter extends Block {
   constructor(props) {
@@ -15,17 +16,10 @@ export default class ChatFooter extends Block {
           this.setProps({ isShareMenuOpened: !this.props.isShareMenuOpened })
         },
       }),
-      SendMessageButton: new IconButton({
-        icon: new SendMessageIcon({}),
-        className: 'chat-footer__send-button',
-      }),
-      MessageInput: new Input({
-        id: 'message',
-        className: 'chat-footer__message-field',
-        placeholder: 'Сообщение',
-        type: 'text',
-      }),
       FileTypeMenu: new FileTypeMenu({}),
+      FormMessage: new FormMessage({
+        onSubmit: formSubmit,
+      }),
     })
   }
 
@@ -34,11 +28,7 @@ export default class ChatFooter extends Block {
       <div class='chat-footer'>
         {{{ ShareFileButton }}}
 
-        <form class='chat-footer__message-form'>
-          {{{ MessageInput }}}
-          
-          {{{ SendMessageButton }}}
-        </form>
+        {{{ FormMessage }}}
 
         {{#if isShareMenuOpened}}
           {{{ FileTypeMenu }}}

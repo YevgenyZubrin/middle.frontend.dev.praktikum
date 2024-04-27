@@ -5,6 +5,10 @@
     "plugin:@typescript-eslint/recommended",
     "eslint:recommended"
   ],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -13,6 +17,10 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-types": "off",
+    "no-underscore-dangle": "off",
+    "import/extensions": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "semi": ["error", "never"],
     "max-len": [
@@ -22,6 +30,14 @@
         "ignoreUrls": true,
         "code": 150 //уменьшить в дальнейшем когда разберусь с преттиером
       }
-    ]
+    ],
+    "import/prefer-default-export": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
   }
 } 
