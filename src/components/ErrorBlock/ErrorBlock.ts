@@ -1,9 +1,13 @@
-// @ts-nocheck
-
 import Block from '../../core/Block'
 
-export default class Profile extends Block {
-  constructor(props) {
+interface ErrorBlockProps {
+  errorCode: string
+  errorDescription: string
+  backLinkText: string
+}
+
+export default class ErrorBlock extends Block<ErrorBlockProps> {
+  constructor(props: ErrorBlockProps) {
     super({
       ...props,
     })

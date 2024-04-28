@@ -1,10 +1,12 @@
-// @ts-nocheck
-
 import Block from '../../core/Block'
 import { ErrorBlock } from '../../components'
 
-export default class Custom500 extends Block {
-  constructor(props) {
+interface Custom500Props {
+  ErrorBlock: Block
+}
+
+export default class Custom500 extends Block<Custom500Props> {
+  constructor(props: Custom500Props) {
     super({
       ...props,
       ErrorBlock: new ErrorBlock({

@@ -4,15 +4,21 @@ import { chatList } from './src/public/constants'
 
 const pages = {
   login: [Pages.LoginPage],
-  profile: [Pages.ProfilePage, {
-    firstName: 'Ивашка',
-    editProfileMode: false,
-    editPasswordMode: false,
-  }],
-  chats: [Pages.ChatsPage, {
-    chatList,
-    isSomeChatChoosed: false,
-  }],
+  profile: [
+    Pages.ProfilePage,
+    {
+      firstName: 'Ивашка',
+      editProfileMode: false,
+      editPasswordMode: false,
+    },
+  ],
+  chats: [
+    Pages.ChatsPage,
+    {
+      chatList,
+      isSomeChatChoosed: false,
+    },
+  ],
   Custom500: [Pages.Custom500],
   Custom404: [Pages.Custom404],
   nav: [Pages.NavigatePage],

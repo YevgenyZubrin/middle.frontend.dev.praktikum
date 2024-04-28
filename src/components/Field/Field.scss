@@ -8,6 +8,14 @@
     font-size: 10px;
     line-height: 10px;
     color: $gray-50;
+
+    &_profile {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      line-height: 14px;
+    }
   }
 
   &__input {
@@ -17,20 +25,8 @@
     border: none;
     border-bottom: 1px solid $blue-10;
     outline: none;
-  }
 
-  &__message {
-    margin-top: 8px;
-    font-size: 10px;
-    line-height: 10px;
-  
-    &.error {
-      color: $red-10;
-    }
-  }
-
-  &_profile {
-    .field__input {
+    &_profile {
       width: 100%;
       padding: 8px 0;
       text-align: right;
@@ -45,13 +41,15 @@
         background-color: transparent;
       }
     }
+  }
 
-    .field__label {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      line-height: 14px;
+  &__message {
+    margin-top: 8px;
+    font-size: 10px;
+    line-height: 10px;
+  
+    &.error {
+      color: $red-10;
     }
   }
 }

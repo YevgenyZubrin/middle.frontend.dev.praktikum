@@ -1,7 +1,11 @@
 import Block from '../../core/Block'
 
-export default class Message extends Block {
-  constructor(props) {
+interface MessageProps {
+  type: string
+  text: string
+}
+export default class Message extends Block<MessageProps> {
+  constructor(props: MessageProps) {
     super({
       ...props,
     })

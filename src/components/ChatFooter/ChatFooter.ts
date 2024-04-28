@@ -1,12 +1,19 @@
 import Block from '../../core/Block'
-import { formSubmit } from '../../utils'
+import { getValidationResult } from '../../utils'
 import { FileTypeMenu } from '../FileTypeMenu'
 import { FormMessage } from '../FormMessage'
 import { IconButton } from '../IconButton'
 import { ShareFileIcon } from '../Icons'
 
-export default class ChatFooter extends Block {
-  constructor(props) {
+interface ChatFooterProps {
+  isShareMenuOpened?: boolean
+  ShareFileButton?: IconButton
+  FileTypeMenu?: FileTypeMenu
+  FormMessage?: FormMessage
+}
+
+export default class ChatFooter extends Block<ChatFooterProps> {
+  constructor(props: ChatFooterProps) {
     super({
       ...props,
       ShareFileButton: new IconButton({
@@ -18,7 +25,13 @@ export default class ChatFooter extends Block {
       }),
       FileTypeMenu: new FileTypeMenu({}),
       FormMessage: new FormMessage({
-        onSubmit: formSubmit,
+        onSubmit: (e: Event) => {
+          e.preventDefault()
+          if (e.target) {
+            // eslint-disable-next-line no-console
+            console.log(getValidationResult(e.target))
+          }
+        },
       }),
     })
   }

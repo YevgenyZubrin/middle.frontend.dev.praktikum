@@ -1,12 +1,6 @@
 import Block from '../../core/Block'
 
 export default class BackLink extends Block {
-  constructor(props) {
-    super({
-      ...props,
-    })
-  }
-
   render() {
     return `
       <a class="back-link" href="/">

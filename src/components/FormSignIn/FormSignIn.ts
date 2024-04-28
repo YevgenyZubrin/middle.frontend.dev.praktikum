@@ -3,8 +3,16 @@ import { validate } from '../../utils'
 import { Button } from '../Button'
 import { Field } from '../Field'
 
-export default class FormSignIn extends Block {
-  constructor(props) {
+interface FormSignInProps {
+  events?: { submit: (e: Event) => void }
+  onSubmit?: (e: Event) => void
+  LoginField?: Field
+  PasswordField?: Field
+  SubmitButton?: Button
+}
+
+export default class FormSignIn extends Block<FormSignInProps> {
+  constructor(props: FormSignInProps) {
     super({
       ...props,
       events: {
@@ -15,8 +23,10 @@ export default class FormSignIn extends Block {
         labelText: 'Логин',
         type: 'text',
         disabled: false,
-        onBlur: (e) => {
-          this.validateField('login', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target && e.target instanceof HTMLInputElement) {
+            this.validateField('login', e.target.value)
+          }
         },
       }),
       PasswordField: new Field({
@@ -24,8 +34,10 @@ export default class FormSignIn extends Block {
         labelText: 'Пароль',
         type: 'password',
         disabled: false,
-        onBlur: (e) => {
-          this.validateField('password', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target && e.target instanceof HTMLInputElement) {
+            this.validateField('password', e.target.value)
+          }
         },
       }),
       SubmitButton: new Button({
@@ -36,10 +48,11 @@ export default class FormSignIn extends Block {
     })
   }
 
-  validateField(fieldName, value) {
-    const componentName = Object.entries(this.children)
-      .map(([name, component]) => ({ name, props: component.props }))
-      .find((item) => item.props.id === fieldName)?.name
+  validateField(fieldName: string, value: string) {
+    const componentName =
+      Object.entries(this.children)
+        .map(([name, component]) => ({ name, props: component.props }))
+        .find((item) => item.props.id === fieldName)?.name ?? ''
 
     const errorText = validate(fieldName, value)
 

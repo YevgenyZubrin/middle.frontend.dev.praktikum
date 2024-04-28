@@ -3,8 +3,14 @@ import { getComponentsList } from '../../utils'
 import { FileIcon, LocationIcon, MediaIcon } from '../Icons'
 import { IconButton } from '../IconButton'
 
+interface FileTypeList {
+  text: string
+  icon: MediaIcon | FileIcon | LocationIcon
+  className: string
+}
+
 export default class FileTypeMenu extends Block {
-  constructor(props) {
+  constructor(props = {}) {
     const fileTypeList = [
       {
         text: 'Фото или Видео',
@@ -23,10 +29,7 @@ export default class FileTypeMenu extends Block {
       },
     ]
 
-    const buttonList = getComponentsList(
-      fileTypeList,
-      IconButton,
-    )
+    const buttonList = getComponentsList<FileTypeList>(fileTypeList, IconButton)
 
     super({
       ...props,
@@ -38,7 +41,7 @@ export default class FileTypeMenu extends Block {
   render() {
     return `
       <div class="file-type-menu__list">
-        ${this.props.buttonListKey.map((key) => `{{{ ${key} }}}`).join('')}
+        ${(this.props.buttonListKey as string[]).map((key) => `{{{ ${key} }}}`).join('')}
       </div>  
     `
   }

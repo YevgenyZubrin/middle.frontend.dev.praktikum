@@ -7,25 +7,37 @@ import { ChatHeader } from '../../components/ChatHeader'
 import { ChatFooter } from '../../components/ChatFooter'
 import { AddOrDeleteUser } from '../../components/AddOrDeleteUser'
 import { Messages } from '../../components/Messages'
+import { IChatList } from '../../public/constants/chatList'
 
-export default class ChatsPage extends Block {
-  constructor(props) {
-    const chatList = getComponentsList(props.chatList, Chat, {
+interface ChatsPageProps {
+  chatList: IChatList[]
+  isSomeChatChoosed: boolean
+  chatListKeys: string[]
+  ProfileButton: Button
+  SearchInput: Input
+  ChatHeader: ChatHeader
+  ChatFooter: ChatFooter
+  AddUserModal: Modal
+  RemoveUserModal: Modal
+  Messages: Messages
+}
+
+export default class ChatsPage extends Block<ChatsPageProps> {
+  constructor(props: ChatsPageProps) {
+    const chatList = getComponentsList<IChatList>(props.chatList, Chat, {
       onClick: () => {
         this.setProps({ isSomeChatChoosed: true })
       },
     })
 
     const choosedChat = props.chatList.find((item) => item.choosed)
-
+    const chatListKeys = Object.keys(chatList)
     super({
       ...props,
+      chatListKeys,
       ProfileButton: new Button({
         text: 'Профиль',
         className: 'chats__profile-button',
-        onClick: () => {
-          this.setProps({ isSomeChatChoosed: true })
-        },
       }),
       SearchInput: new Input({
         id: 'search',
@@ -34,17 +46,28 @@ export default class ChatsPage extends Block {
         type: 'text',
       }),
       ChatHeader: new ChatHeader({
-        ...choosedChat,
+        imgUrl: choosedChat?.imgUrl ?? '',
+        nickname: choosedChat?.nickname ?? '',
+        onAddUserModalOpen: () => {
+          this.children.AddUserModal.setProps({ isOpen: true })
+        },
+        onRemoveUserModalOpen: () => {
+          this.children.RemoveUserModal.setProps({ isOpen: true })
+        },
         ...props,
       }),
       ChatFooter: new ChatFooter({}),
-      UserActionModal: new Modal({
+      AddUserModal: new Modal({
         className: 'chats__user-action-modal',
         isOpen: false,
         modalChildren: new AddOrDeleteUser({ isAddUser: true }),
       }),
-      Messages: new Messages({ messages: choosedChat.messages }),
-      chatListKeys: Object.keys(chatList),
+      RemoveUserModal: new Modal({
+        className: 'chats__user-action-modal',
+        isOpen: false,
+        modalChildren: new AddOrDeleteUser({ isAddUser: false }),
+      }),
+      Messages: new Messages({ messages: choosedChat?.messages ?? [] }),
       ...chatList,
     })
   }
@@ -58,7 +81,7 @@ export default class ChatsPage extends Block {
             {{{ SearchInput }}}
           </div>
           <ul class="chats__list">
-            ${this.props.chatListKeys.map((key) => `{{{ ${key} }}}`).join('')}
+            ${(this.props.chatListKeys as string[]).map((key) => `{{{ ${key} }}}`).join('')}
           </ul>  
         </section>
         <section class="chats__right-side right-side">
@@ -79,7 +102,8 @@ export default class ChatsPage extends Block {
 
         </section>
 
-        {{{ UserActionModal }}}
+        {{{ AddUserModal }}}
+        {{{ RemoveUserModal }}}
 
       </section>
     `

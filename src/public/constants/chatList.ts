@@ -1,6 +1,29 @@
 import { nanoid } from 'nanoid'
 
-const chatList = [
+export interface IMessagesPerDay {
+  text: string
+  time: string
+  unread: boolean
+  type: string
+}
+
+export interface IMessages {
+  date: string
+  messagesPerDay: IMessagesPerDay[]
+}
+
+export interface IChatList {
+  id: string
+  nickname: string
+  lastMessage: string
+  lastMessageTime: string
+  unreadMessages: number
+  imgUrl: string
+  choosed: boolean
+  messages: IMessages[]
+}
+
+const chatList: IChatList[] = [
   {
     id: nanoid(),
     nickname: 'Юля',
@@ -9,6 +32,7 @@ const chatList = [
     unreadMessages: 7,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -18,6 +42,7 @@ const chatList = [
     unreadMessages: 0,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -27,6 +52,7 @@ const chatList = [
     unreadMessages: 0,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -105,6 +131,7 @@ const chatList = [
     unreadMessages: 0,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -114,6 +141,7 @@ const chatList = [
     unreadMessages: 9,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -123,6 +151,7 @@ const chatList = [
     unreadMessages: 6,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -132,6 +161,7 @@ const chatList = [
     unreadMessages: 2,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -141,6 +171,7 @@ const chatList = [
     unreadMessages: 2,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -150,6 +181,7 @@ const chatList = [
     unreadMessages: 1,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -159,6 +191,7 @@ const chatList = [
     unreadMessages: 3,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -168,6 +201,7 @@ const chatList = [
     unreadMessages: 3,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -177,6 +211,7 @@ const chatList = [
     unreadMessages: 5,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -186,6 +221,7 @@ const chatList = [
     unreadMessages: 8,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
   {
     id: nanoid(),
@@ -195,6 +231,7 @@ const chatList = [
     unreadMessages: 2,
     imgUrl: '',
     choosed: false,
+    messages: [],
   },
 ]
 

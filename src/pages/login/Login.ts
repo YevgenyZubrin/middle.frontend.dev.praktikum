@@ -2,11 +2,16 @@ import Block from '../../core/Block'
 import { Button } from '../../components'
 import { FormSignUp } from '../../components/FormSignUp'
 import { FormSignIn } from '../../components/FormSignIn'
-import { getValidationResult } from '../../utils'
-import { LoginProps } from './interface'
-import getName from '../../utils/getName'
+import { getName, getValidationResult } from '../../utils'
 
-export default class Login extends Block {
+export interface LoginProps {
+  AddAccountButton?: Button
+  SignInButton?: Button
+  FormSignUp?: FormSignUp
+  FormSignIn?: FormSignIn
+}
+
+export default class LoginPage extends Block<LoginProps> {
   constructor(props: LoginProps) {
     super({
       ...props,
@@ -25,13 +30,13 @@ export default class Login extends Block {
         },
       }),
       FormSignUp: new FormSignUp({
-        onSubmit: (e) => {
+        onSubmit: (e: Event) => {
           const fields = this.children.FormSignUp.children.SignUpFields.children
           this.onSubmitValidation(e, fields)
         },
       }),
       FormSignIn: new FormSignIn({
-        onSubmit: (e) => {
+        onSubmit: (e: Event) => {
           const fields = this.children.FormSignIn.children
           this.onSubmitValidation(e, fields)
         },
@@ -39,7 +44,7 @@ export default class Login extends Block {
     })
   }
 
-  onSubmitValidation(e, fields) {
+  onSubmitValidation(e: Event, fields: Record<string, any>) {
     e.preventDefault()
     const validationResultList = e.target !== null ? getValidationResult(e.target) : []
 

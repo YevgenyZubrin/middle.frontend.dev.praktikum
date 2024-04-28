@@ -2,13 +2,25 @@ import Block from '../../core/Block'
 import { validate } from '../../utils'
 import { Field } from '../Field'
 
-export default class SignUpFields extends Block {
-  constructor(props) {
+interface SignUpFieldsProps {
+  EmailField?: Field
+  LoginField?: Field
+  FirstNameField?: Field
+  SecondNameField?: Field
+  PhoneField?: Field
+  PasswordField?: Field
+  ConfirmPasswordField?: Field
+}
+
+export default class SignUpFields extends Block<SignUpFieldsProps> {
+  constructor(props: SignUpFieldsProps) {
     super({
       ...props,
       EmailField: new Field({
-        onBlur: (e) => {
-          this.validate('email', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('email', e.target.value)
+          }
         },
         id: 'email',
         labelText: 'Почта',
@@ -16,8 +28,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       LoginField: new Field({
-        onBlur: (e) => {
-          this.validate('login', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('login', e.target.value)
+          }
         },
         id: 'login',
         labelText: 'Логин',
@@ -25,8 +39,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       FirstNameField: new Field({
-        onBlur: (e) => {
-          this.validate('first_name', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('first_name', e.target.value)
+          }
         },
         id: 'first_name',
         labelText: 'Имя',
@@ -34,8 +50,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       SecondNameField: new Field({
-        onBlur: (e) => {
-          this.validate('second_name', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('second_name', e.target.value)
+          }
         },
         id: 'second_name',
         labelText: 'Фамилия',
@@ -43,8 +61,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       PhoneField: new Field({
-        onBlur: (e) => {
-          this.validate('phone', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('phone', e.target.value)
+          }
         },
         id: 'phone',
         labelText: 'Телефон',
@@ -52,8 +72,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       PasswordField: new Field({
-        onBlur: (e) => {
-          this.validate('password', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('password', e.target.value)
+          }
         },
         id: 'password',
         labelText: 'Пароль',
@@ -61,8 +83,10 @@ export default class SignUpFields extends Block {
         disabled: false,
       }),
       ConfirmPasswordField: new Field({
-        onBlur: (e) => {
-          this.validate('confirmPassword', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('confirmPassword', e.target.value)
+          }
         },
         id: 'confirmPassword',
         labelText: 'Пароль (еще раз)',
@@ -72,10 +96,11 @@ export default class SignUpFields extends Block {
     })
   }
 
-  validate(fieldName, value) {
-    const componentName = Object.entries(this.children)
-      .map(([name, component]) => ({ name, props: component.props }))
-      .find((item) => item.props.id === fieldName)?.name
+  validate(fieldName: string, value: string) {
+    const componentName =
+      Object.entries(this.children)
+        .map(([name, component]) => ({ name, props: component.props }))
+        .find((item) => item.props.id === fieldName)?.name ?? ''
 
     const errorText = validate(fieldName, value)
 

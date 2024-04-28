@@ -1,7 +1,14 @@
 import Block from '../../core/Block'
 
-export default class Modal extends Block {
-  constructor(props) {
+interface ModalProps {
+  overlayClassName?: string
+  isOpen: boolean
+  className?: string
+  modalChildren: Block
+}
+
+export default class Modal extends Block<ModalProps> {
+  constructor(props: ModalProps) {
     super({
       ...props,
     })

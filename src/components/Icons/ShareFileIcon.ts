@@ -1,7 +1,14 @@
+/* eslint-disable max-len */
+// TODO: разобраться почему не отрабатывает преттиер, сейчас уже не времени
 import Block from '../../core/Block'
 
-export default class ShareFileIcon extends Block {
-  constructor(props) {
+interface ShareFileIconProps {
+  events?: { click: () => void }
+  onClick?: () => void
+}
+
+export default class ShareFileIcon extends Block<ShareFileIconProps> {
+  constructor(props: ShareFileIconProps) {
     super({
       ...props,
       events: {

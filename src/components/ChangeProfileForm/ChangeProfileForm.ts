@@ -2,8 +2,15 @@ import Block from '../../core/Block'
 import { Button } from '../Button'
 import { ProfileFields } from '../ProfileFields'
 
-export default class ChangeProfileForm extends Block {
-  constructor(props) {
+interface ChangeProfileFormProps {
+  events?: { submit: (e: Event) => void }
+  onSubmit: (e: Event) => void
+  SaveButton?: Button
+  ProfileFields?: ProfileFields
+}
+
+export default class ChangeProfileForm extends Block<ChangeProfileFormProps> {
+  constructor(props: ChangeProfileFormProps) {
     super({
       ...props,
       events: {

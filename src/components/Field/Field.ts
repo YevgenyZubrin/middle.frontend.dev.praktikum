@@ -1,8 +1,21 @@
 import { Input } from '../Input'
 import Block from '../../core/Block'
 
-export default class Field extends Block {
-  constructor(props) {
+interface FieldProps {
+  isProfile?: boolean
+  className?: string
+  id: string
+  labelText: string
+  message?: { text: string; type: string }
+  Input?: Input
+  onBlur?: (e: Event) => void
+  type: string
+  disabled?: boolean
+  ProfileInput?: Input
+}
+
+export default class Field extends Block<FieldProps> {
+  constructor(props: FieldProps) {
     super({
       ...props,
       Input: new Input({
@@ -12,16 +25,27 @@ export default class Field extends Block {
           blur: props.onBlur || (() => {}),
         },
       }),
+      ProfileInput: new Input({
+        ...props,
+        className: 'field__input_profile',
+        events: {
+          blur: props.onBlur || (() => {}),
+        },
+      }),
     })
   }
 
   render() {
     return `
-      <div class="field{{#if isProfile}} field_profile{{/if}} {{className}}">
-        <label class="field__label" for={{id}}>
+      <div class="field {{className}}">
+        <label class="field__label{{#if isProfile}} field__label_profile{{/if}}" for={{id}}>
           {{labelText}}
         </label>
-        {{{ Input }}}
+        {{#if isProfile}} 
+          {{{ ProfileInput }}}
+        {{else}}
+          {{{ Input }}}
+        {{/if}}
         {{#if message.text}}
           <p class="field__message {{message.type}}">{{message.text}}</p>
         {{/if}}

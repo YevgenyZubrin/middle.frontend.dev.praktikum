@@ -1,8 +1,13 @@
 import Block from '../../core/Block'
 import { Button } from '../Button'
 
-export default class Avatar extends Block {
-  constructor(props) {
+interface AvatarProps {
+  Button?: Button
+  changeAvatar: () => void
+}
+
+export default class Avatar extends Block<AvatarProps> {
+  constructor(props: AvatarProps) {
     super({
       ...props,
       Button: new Button({
@@ -11,7 +16,6 @@ export default class Avatar extends Block {
         onClick: () => {
           props.changeAvatar()
         },
-        isChangeAvatar: true,
       }),
     })
   }

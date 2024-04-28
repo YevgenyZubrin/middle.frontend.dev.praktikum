@@ -5,8 +5,20 @@ import { MenuIcon } from '../Icons'
 import { Typography } from '../Typography'
 import { UserActionsMenu } from '../UserActionsMenu'
 
-export default class ChatHeader extends Block {
-  constructor(props) {
+interface ChatHeaderProps {
+  imgUrl: string
+  nickname: string
+  isUserActionMenuOpen?: boolean
+  ChatImage?: ChatImage
+  ChatName?: Typography
+  MenuButton?: IconButton
+  UserActionsMenu?: UserActionsMenu
+  onAddUserModalOpen?: () => void
+  onRemoveUserModalOpen?: () => void
+}
+
+export default class ChatHeader extends Block<ChatHeaderProps> {
+  constructor(props: ChatHeaderProps) {
     super({
       ...props,
       ChatImage: new ChatImage({
@@ -21,7 +33,10 @@ export default class ChatHeader extends Block {
           this.setProps({ isUserActionMenuOpen: !this.props.isUserActionMenuOpen })
         },
       }),
-      UserActionsMenu: new UserActionsMenu({ ...props }),
+      UserActionsMenu: new UserActionsMenu({
+        onAddUserModalOpen: props.onAddUserModalOpen,
+        onRemoveUserModalOpen: props.onRemoveUserModalOpen,
+      }),
     })
   }
 

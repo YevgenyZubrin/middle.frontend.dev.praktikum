@@ -1,12 +1,8 @@
+/* eslint-disable max-len */
+// TODO: разобраться почему не отрабатывает преттиер, сейчас уже не времени
 import Block from '../../core/Block'
 
 export default class MediaIcon extends Block {
-  constructor(props) {
-    super({
-      ...props,
-    })
-  }
-
   render() {
     return `
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">

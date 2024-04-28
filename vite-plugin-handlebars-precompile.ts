@@ -2,10 +2,10 @@
 import Handlebars from 'handlebars'
 
 interface Transform {
-  (src: unknown, id: string): {code: string} | undefined
+  (src: unknown, id: string): { code: string } | undefined
 }
 
-export default function handlebars(): {name: string, transform: Transform} {
+export default function handlebars(): { name: string; transform: Transform } {
   const fileRegexp = /\.hbs$|\. handlebars$/
 
   return {
@@ -19,9 +19,7 @@ export default function handlebars(): {name: string, transform: Transform} {
       
       export default Handlebars.template(${Handlebars.precompile(src)})
       `
-      console.log('passed', { code })
-
-      return ({ code })
+      return { code }
     },
   }
 }

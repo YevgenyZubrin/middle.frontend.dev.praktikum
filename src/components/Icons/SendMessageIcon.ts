@@ -1,7 +1,12 @@
 import Block from '../../core/Block'
 
-export default class SendMessageIcon extends Block {
-  constructor(props) {
+interface SendMessageIconProps {
+  events?: { click: () => void }
+  onClick?: () => void
+}
+
+export default class SendMessageIcon extends Block<SendMessageIconProps> {
+  constructor(props: SendMessageIconProps) {
     super({
       ...props,
       events: {

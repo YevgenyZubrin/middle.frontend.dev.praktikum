@@ -1,12 +1,6 @@
 import Block from '../../core/Block'
 
 export default class MenuIcon extends Block {
-  constructor(props) {
-    super({
-      ...props,
-    })
-  }
-
   render() {
     return `
       <svg width="3" height="16" viewBox="0 0 3 16" fill="none" xmlns="http://www.w3.org/2000/svg">

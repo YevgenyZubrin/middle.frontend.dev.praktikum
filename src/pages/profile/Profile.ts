@@ -1,24 +1,32 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Handlebars from 'handlebars'
 import { ChangeAvatarModal } from '../../components/ChangeAvatarModal'
 import Block from '../../core/Block'
-import {
-  Button,
-  BackLink,
-  Avatar,
-  Modal,
-} from '../../components'
+import { Button, BackLink, Avatar, Modal } from '../../components'
 import { ProfileFields } from '../../components/ProfileFields'
-import { Form } from '../../components/Form'
 import { ChangeProfileForm } from '../../components/ChangeProfileForm'
 import { ChangePasswordForm } from '../../components/ChangePasswordForm'
-import { formSubmit, getValidationResult } from '../../utils'
-import getName from '../../utils/getName'
+import { getName, getValidationResult } from '../../utils'
 
 Handlebars.registerHelper('neither', (a, b) => !a && !b)
 
-export default class Profile extends Block {
-  constructor(props) {
+interface ProfileProps {
+  className: string
+  firstName: string
+  editPasswordMode: boolean
+  editProfileMode: boolean
+  ChangePasswordButton: Button
+  ChangeDataButton: Button
+  ExitButton: Button
+  BackLink: BackLink
+  Avatar: Avatar
+  Modal: Modal
+  ProfileFields: ProfileFields
+  ChangeProfileForm: ChangeProfileForm
+  ChangePasswordForm: ChangePasswordForm
+}
+
+export default class Profile extends Block<ProfileProps> {
+  constructor(props: ProfileProps) {
     super({
       ...props,
       ChangePasswordButton: new Button({
@@ -56,23 +64,21 @@ export default class Profile extends Block {
       }),
       ProfileFields: new ProfileFields({}),
       ChangeProfileForm: new ChangeProfileForm({
-        onSubmit: (e: Event) => {
+        onSubmit: (e: Event): void => {
           const fields = this.children.ChangeProfileForm.children.ProfileFields.children
           this.onSubmitValidation(e, fields)
         },
       }),
-      ChangePasswordForm: new Form({
-        formChildren: new ChangePasswordForm({
-          onSubmit: (e) => {
-            const fields = this.children.ChangePasswordForm.children.formChildren.children
-            this.onSubmitValidation(e, fields)
-          },
-        }),
+      ChangePasswordForm: new ChangePasswordForm({
+        onSubmit: (e: Event): void => {
+          const fields = this.children.ChangePasswordForm.children.formChildren.children
+          this.onSubmitValidation(e, fields)
+        },
       }),
     })
   }
 
-  onSubmitValidation(e, fields) {
+  onSubmitValidation(e: Event, fields: Record<string, any>) {
     e.preventDefault()
     const validationResultList = e.target !== null ? getValidationResult(e.target) : []
 

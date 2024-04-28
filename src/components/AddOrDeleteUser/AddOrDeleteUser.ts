@@ -3,16 +3,20 @@ import { Button } from '../Button'
 import { Field } from '../Field'
 import { Typography } from '../Typography'
 
-export default class AddOrDeleteUser extends Block {
-  constructor(props) {
+interface AddOrDeleteUserProps {
+  isAddUser: boolean
+  Button?: Button
+  LoginField?: Field
+  Title?: Typography
+}
+
+export default class AddOrDeleteUser extends Block<AddOrDeleteUserProps> {
+  constructor(props: AddOrDeleteUserProps) {
     super({
       ...props,
       Button: new Button({
         className: 'add-or-delete-user__button',
         text: props.isAddUser ? 'Добавить' : 'Удалить',
-        onClick: () => {
-
-        },
         filled: true,
       }),
       LoginField: new Field({

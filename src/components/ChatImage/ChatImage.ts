@@ -1,7 +1,12 @@
 import Block from '../../core/Block'
 
-export default class ChatImage extends Block {
-  constructor(props) {
+interface ChatImageProps {
+  imgUrl?: string
+  className?: string
+}
+
+export default class ChatImage extends Block<ChatImageProps> {
+  constructor(props: ChatImageProps) {
     super({
       ...props,
     })

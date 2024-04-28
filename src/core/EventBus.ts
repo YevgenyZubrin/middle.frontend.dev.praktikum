@@ -1,7 +1,7 @@
 class EventBus<E extends string> {
-  listeners: {[key in E]?: Function[]} = {}
+  listeners: { [key in E]?: Function[] } = {}
 
-  on<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
+  on<F extends (...args: Parameters<F>) => void>(event: E, callback: F) {
     if (!this.listeners[event]) {
       this.listeners[event] = []
     }
@@ -9,17 +9,15 @@ class EventBus<E extends string> {
     this.listeners[event]!.push(callback)
   }
 
-  off<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
+  off<F extends (...args: Parameters<F>) => void>(event: E, callback: F) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }
 
-    this.listeners[event] = this.listeners[event]!.filter(
-      (listener) => listener !== callback,
-    )
+    this.listeners[event] = this.listeners[event]!.filter((listener) => listener !== callback)
   }
 
-  emit<F extends(...args: any) => void>(event: E, ...args: Parameters<F>) {
+  emit<F extends (...args: any) => void>(event: E, ...args: Parameters<F>) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }

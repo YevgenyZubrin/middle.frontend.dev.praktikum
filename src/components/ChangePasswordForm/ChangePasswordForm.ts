@@ -3,16 +3,27 @@ import { validate } from '../../utils'
 import { Button } from '../Button'
 import { Field } from '../Field'
 
-export default class ChangePasswordForm extends Block {
-  constructor(props) {
+interface ChangePasswordFormProps {
+  events?: { submit: (e: Event) => void }
+  onSubmit: (e: Event) => void
+  OldPasswordField?: Field
+  NewPasswordField?: Field
+  ConfirmPasswordField?: Field
+  SaveButton?: Button
+}
+
+export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
+  constructor(props: ChangePasswordFormProps) {
     super({
       ...props,
       events: {
         submit: props.onSubmit || (() => {}),
       },
       OldPasswordField: new Field({
-        onBlur: (e) => {
-          this.validatePassword('oldPassword', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target && e.target instanceof HTMLInputElement) {
+            this.validatePassword('oldPassword', e.target.value)
+          }
         },
         className: 'change-password-form__field',
         id: 'oldPassword',
@@ -21,8 +32,10 @@ export default class ChangePasswordForm extends Block {
         disabled: false,
       }),
       NewPasswordField: new Field({
-        onBlur: (e) => {
-          this.validatePassword('newPassword', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target && e.target instanceof HTMLInputElement) {
+            this.validatePassword('newPassword', e.target.value)
+          }
         },
         className: 'change-password-form__field',
         id: 'newPassword',
@@ -31,8 +44,10 @@ export default class ChangePasswordForm extends Block {
         disabled: false,
       }),
       ConfirmPasswordField: new Field({
-        onBlur: (e) => {
-          this.validatePassword('confirmPassword', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target && e.target instanceof HTMLInputElement) {
+            this.validatePassword('confirmPassword', e.target.value)
+          }
         },
         className: 'change-password-form__field',
         id: 'confirmPassword',
@@ -48,10 +63,11 @@ export default class ChangePasswordForm extends Block {
     })
   }
 
-  validatePassword(fieldName, value) {
-    const componentName = Object.entries(this.children)
-      .map(([name, component]) => ({ name, props: component.props }))
-      .find((item) => item.props.id === fieldName)?.name
+  validatePassword(fieldName: string, value: string) {
+    const componentName =
+      Object.entries(this.children)
+        .map(([name, component]) => ({ name, props: component.props }))
+        .find((item) => item.props.id === fieldName)?.name ?? ''
 
     const errorText = validate(fieldName, value)
 

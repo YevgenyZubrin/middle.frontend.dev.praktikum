@@ -2,30 +2,41 @@ import Handlebars from 'handlebars'
 import { nanoid } from 'nanoid'
 import EventBus from './EventBus'
 
-type IChildren = Record<string, unknown[]>
-type IProps = Record<string, unknown[]>
+const liveCycleEvents = {
+  INIT: 'init',
+  FLOW_CDM: 'flow:component-did-mount',
+  FLOW_CDU: 'flow:component-did-update',
+  FLOW_RENDER: 'flow:render',
+} as const
 
-export default class Block {
-  static EVENTS = {
-    INIT: 'init',
-    FLOW_CDM: 'flow:component-did-mount',
-    FLOW_CDU: 'flow:component-did-update',
-    FLOW_RENDER: 'flow:render',
-  } as const
+const eventTypes = {
+  click: 'click',
+  blur: 'blur',
+  submit: 'submit',
+} as const
 
+type TEvents = Values<typeof liveCycleEvents>
+type TEventTypes = Values<typeof eventTypes>
+
+type Tevents = { [key in TEventTypes]: () => void }
+type TProps = {
+  events?: Tevents
+} & Record<string, any>
+
+// использую any потому что пропсы погут быть любыми
+
+export default class Block<Props extends Record<string, any> = Record<string, any>> {
   private _element: Element | null = null
 
-  children: IChildren = {}
+  children: TProps = {}
 
-  props: IProps = {}
+  props: TProps = {}
 
-  private eventBus: () => EventBus<EVENTS>
-
-  // private meta = null
+  private eventBus
 
   _id = nanoid(6)
 
-  constructor(propsWithChildren = {}) {
+  constructor(propsWithChildren: Props = {} as Props) {
     const eventBus = new EventBus()
     const { props, children } = this.getChildrenAndProps(propsWithChildren)
     this.props = this.makePropsProxy({ ...props })
@@ -35,44 +46,46 @@ export default class Block {
 
     this.registerEvents(eventBus)
 
-    eventBus.emit(Block.EVENTS.INIT)
+    eventBus.emit(liveCycleEvents.INIT)
   }
 
   private addEvents() {
-    const { events = {} } = this.props
+    const { events = {} as Tevents } = this.props
 
     Object.keys(events).forEach((eventName) => {
-      this._element.addEventListener(eventName, events[eventName])
+      const name = eventName as TEventTypes
+
+      if (this._element) {
+        this._element.addEventListener(eventName, events[name])
+      }
     })
   }
 
   private removeEvents() {
-    const { events = {} } = this.props
+    const { events = {} as Tevents } = this.props
 
     if (this._element) {
       Object.keys(events).forEach((eventName) => {
-        this._element.removeEventListener(eventName, events[eventName])
+        const name = eventName as TEventTypes
+
+        if (this._element) {
+          this._element.removeEventListener(eventName, events[name])
+        }
       })
     }
   }
 
-  private registerEvents(eventBus) {
-    eventBus.on(Block.EVENTS.INIT, this._init.bind(this))
-    eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
-    eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
-    eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this))
+  private registerEvents(eventBus: EventBus<TEvents>) {
+    eventBus.on(liveCycleEvents.INIT, this._init.bind(this))
+    eventBus.on(liveCycleEvents.FLOW_CDM, this._componentDidMount.bind(this))
+    eventBus.on(liveCycleEvents.FLOW_CDU, this._componentDidUpdate.bind(this))
+    eventBus.on(liveCycleEvents.FLOW_RENDER, this._render.bind(this))
   }
 
-  // private createResources() {
-  //   const { tagName } = this.meta
-  //   this._element = this.createDocumentElement(tagName)
-  // }
-
   _init() {
-    // this.createResources();
     this.init()
 
-    this.eventBus().emit(Block.EVENTS.FLOW_RENDER)
+    this.eventBus().emit(liveCycleEvents.FLOW_RENDER)
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -89,11 +102,11 @@ export default class Block {
   componentDidMount() {}
 
   dispatchComponentDidMount() {
-    this.eventBus().emit(Block.EVENTS.FLOW_CDM)
+    this.eventBus().emit(liveCycleEvents.FLOW_CDM)
   }
 
-  _componentDidUpdate(oldProps, newProps) {
-    const response = this.componentDidUpdate(oldProps, newProps)
+  _componentDidUpdate() {
+    const response = this.componentDidUpdate()
     if (!response) {
       return
     }
@@ -101,18 +114,18 @@ export default class Block {
     this._render()
   }
 
-  componentDidUpdate(oldProps, newProps) {
+  componentDidUpdate() {
     return true
   }
 
-  dispatchComponentDidUpdate(oldTarget, newProps) {
-    this.eventBus().emit(Block.EVENTS.FLOW_CDU, oldTarget, newProps)
+  dispatchComponentDidUpdate(oldTarget: TProps, newProps: TProps) {
+    this.eventBus().emit(liveCycleEvents.FLOW_CDU, oldTarget, newProps)
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private getChildrenAndProps(propsAndChildren) {
-    const children = {}
-    const props = {}
+  private getChildrenAndProps(propsAndChildren: Props) {
+    const children: TProps = {}
+    const props: TProps = {}
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (value instanceof Block) {
@@ -125,11 +138,10 @@ export default class Block {
     return { children, props }
   }
 
-  setProps = (nextProps) => {
+  setProps = (nextProps: TProps) => {
     if (!nextProps) {
       return
     }
-    // console.log({props:this.props,nextProps})
     Object.assign(this.props, nextProps)
   }
 
@@ -175,23 +187,23 @@ export default class Block {
     return this.element
   }
 
-  private makePropsProxy(props) {
-    // Можно и так передать this
-    // Такой способ больше не применяется с приходом ES6+
+  private makePropsProxy(props: TProps) {
+    const updateComponent = (oldTarget: TProps, target: TProps) => {
+      this.eventBus().emit(liveCycleEvents.FLOW_CDU, oldTarget, target)
+    }
 
-    const self = this
+    const updateComponentBind = updateComponent.bind(this)
 
     return new Proxy(props, {
       get(target, prop) {
-        const value = target[prop]
+        const value = target[prop as string]
         return typeof value === 'function' ? value.bind(target) : value
       },
       set(target, prop, value) {
         const oldTarget = { ...target }
-        target[prop] = value
-        // Запускаем обновление компоненты
-        // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
-        self.eventBus().emit(Block.EVENTS.FLOW_CDU, oldTarget, target)
+        // eslint-disable-next-line no-param-reassign
+        target[prop as string] = value
+        updateComponentBind(oldTarget, target)
         return true
       },
       deleteProperty() {

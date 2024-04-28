@@ -1,25 +1,28 @@
 import Block from '../../core/Block'
+import { IMessages } from '../../public/constants/chatList'
 import getComponentsList from '../../utils/getCopmonentsList'
 import { MessagesPerDay } from '../MessagesPerDay'
 
-export default class Messages extends Block {
-  constructor(props) {
-    const messages = getComponentsList(
-      props.messages,
-      MessagesPerDay,
-    )
+interface MessagesProps {
+  messages: IMessages[]
+  messagesListKeys?: string[]
+}
+
+export default class Messages extends Block<MessagesProps> {
+  constructor(props: MessagesProps) {
+    const messagesList = getComponentsList<IMessages>(props.messages, MessagesPerDay)
 
     super({
       ...props,
-      messagesKeys: Object.keys(messages),
-      ...messages,
+      messagesListKeys: Object.keys(messagesList),
+      ...messagesList,
     })
   }
 
   render() {
     return `
       <div>
-        ${this.props.messagesKeys.map((key) => `{{{ ${key} }}}`).join('')}
+        ${(this.props.messagesListKeys as string[]).map((key) => `{{{ ${key} }}}`).join('')}
       </div>
     `
   }

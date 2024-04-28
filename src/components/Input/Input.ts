@@ -1,7 +1,17 @@
 import Block from '../../core/Block'
 
-export default class Input extends Block {
-  constructor(props) {
+interface InputProps {
+  className?: string
+  id: string
+  type: string
+  disabled?: boolean
+  placeholder?: string
+  events?: { blur: (e: Event) => void }
+  onBlur?: (e: Event) => void
+}
+
+export default class Input extends Block<InputProps> {
+  constructor(props: InputProps) {
     super({
       ...props,
       events: {

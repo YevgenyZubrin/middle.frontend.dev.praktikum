@@ -1,7 +1,15 @@
 import Block from '../../core/Block'
 
-export default class Button extends Block {
-  constructor(props) {
+interface ButtonProps {
+  events?: { click: () => void }
+  onClick?: () => void
+  filled?: boolean
+  className?: string
+  text: string
+}
+
+export default class Button extends Block<ButtonProps> {
+  constructor(props: ButtonProps) {
     super({
       ...props,
       events: { click: props.onClick || (() => {}) },

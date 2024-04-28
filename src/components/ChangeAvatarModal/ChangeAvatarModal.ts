@@ -1,14 +1,22 @@
 import Block from '../../core/Block'
 import { Button } from '../Button'
 
-export default class ChangeAvatarModal extends Block {
-  constructor(props) {
+interface ChangeAvatarModalProps {
+  isFileLoadError: boolean
+  choosedFileName: string
+  isChooseFileError: boolean
+  ChoosePictureButton?: Button
+  ChangePictureButton?: Button
+}
+
+export default class ChangeAvatarModal extends Block<ChangeAvatarModalProps> {
+  constructor(props: ChangeAvatarModalProps) {
     super({
       ...props,
       ChoosePictureButton: new Button({
         text: 'Выбрать файл на компьютере',
         className: 'change-avatar__choose-file-button',
-        onClick: () => {
+        onClick: (): void => {
           this.setProps({ choosedFileName: 'pic.jpg' })
         },
       }),
@@ -16,7 +24,7 @@ export default class ChangeAvatarModal extends Block {
         text: 'Поменять',
         filled: true,
         className: 'change-avatar__change-button',
-        onClick: () => {
+        onClick: (): void => {
           if (!this.props.choosedFileName) {
             this.setProps({ isChooseFileError: true })
           } else {

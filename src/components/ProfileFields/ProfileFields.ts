@@ -1,15 +1,26 @@
 import Block from '../../core/Block'
-import { validate } from '../../utils'
-import getName from '../../utils/getName'
+import { getName, validate } from '../../utils'
 import { Field } from '../Field'
 
-export default class ProfileFields extends Block {
-  constructor(props) {
+interface ProfileFieldsProps {
+  EmailField?: Field
+  LoginField?: Field
+  FirstNameField?: Field
+  SecondNameField?: Field
+  DisplayNameField?: Field
+  PhoneField?: Field
+  editProfileMode?: boolean
+}
+
+export default class ProfileFields extends Block<ProfileFieldsProps> {
+  constructor(props: ProfileFieldsProps) {
     super({
       ...props,
       EmailField: new Field({
-        onBlur: (e) => {
-          this.validate('email', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('email', e.target.value)
+          }
         },
         id: 'email',
         labelText: 'Почта',
@@ -18,8 +29,10 @@ export default class ProfileFields extends Block {
         isProfile: true,
       }),
       LoginField: new Field({
-        onBlur: (e) => {
-          this.validate('login', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('login', e.target.value)
+          }
         },
         id: 'login',
         labelText: 'Логин',
@@ -28,8 +41,10 @@ export default class ProfileFields extends Block {
         isProfile: true,
       }),
       FirstNameField: new Field({
-        onBlur: (e) => {
-          this.validate('first_name', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('first_name', e.target.value)
+          }
         },
         id: 'first_name',
         labelText: 'Имя',
@@ -38,8 +53,10 @@ export default class ProfileFields extends Block {
         isProfile: true,
       }),
       SecondNameField: new Field({
-        onBlur: (e) => {
-          this.validate('second_name', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('second_name', e.target.value)
+          }
         },
         id: 'second_name',
         labelText: 'Фамилия',
@@ -48,8 +65,10 @@ export default class ProfileFields extends Block {
         isProfile: true,
       }),
       DisplayNameField: new Field({
-        onBlur: (e) => {
-          this.validate('display_name', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('display_name', e.target.value)
+          }
         },
         id: 'display_name',
         labelText: 'Имя в чате',
@@ -58,8 +77,10 @@ export default class ProfileFields extends Block {
         isProfile: true,
       }),
       PhoneField: new Field({
-        onBlur: (e) => {
-          this.validate('phone', e.target.value)
+        onBlur: (e: Event) => {
+          if (e.target instanceof HTMLInputElement) {
+            this.validate('phone', e.target.value)
+          }
         },
         id: 'phone',
         labelText: 'Телефон',
@@ -70,8 +91,7 @@ export default class ProfileFields extends Block {
     })
   }
 
-  validate(fieldName, value) {
-    console.log(this.children)
+  validate(fieldName: string, value: string) {
     const componentName = getName(this.children, fieldName)
 
     if (this.props.editProfileMode) {

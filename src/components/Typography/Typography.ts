@@ -1,7 +1,12 @@
 import Block from '../../core/Block'
 
-export default class Typography extends Block {
-  constructor(props) {
+interface TypographyProps {
+  className?: string
+  text: string
+}
+
+export default class Typography extends Block<TypographyProps> {
+  constructor(props: TypographyProps) {
     super({
       ...props,
     })

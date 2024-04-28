@@ -2,8 +2,9 @@
   "parser": "@typescript-eslint/parser",
   "extends": [
     "airbnb",
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "eslint:recommended"
+    "prettier"
   ],
   "env": {
     "browser": true,
@@ -14,9 +15,11 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "rules": {
+    "implicit-arrow-linebreak": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "no-underscore-dangle": "off",
@@ -28,10 +31,18 @@
       {
         "ignoreComments": true,
         "ignoreUrls": true,
-        "code": 150 //уменьшить в дальнейшем когда разберусь с преттиером
+        "code": 120
       }
     ],
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "prettier/prettier": ["error", {
+      "semi": false,
+      "singleQuote": true,
+      "jsxSingleQuote": true,
+      "trailingComma": "all",
+      "bracketSpacing": true,
+      "printWidth": 120
+    }]
   },
   "settings": {
     "import/resolver": {
