@@ -1,7 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import { fileURLToPath } from 'url'
+import { resolve, dirname } from 'path'
 import handlebars from './vite-plugin-handlebars-precompile.ts'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export default defineConfig({
   plugins: [handlebars()],

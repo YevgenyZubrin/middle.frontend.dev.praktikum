@@ -21,21 +21,21 @@ function queryStringify(data: Document | XMLHttpRequestBodyInit | null) {
   return ''
 }
 
+interface MethodParams {
+  (url: string, options: IOptions): void
+}
+
 class HTTPTransport {
-  get = (url: string, options: IOptions = {} as IOptions) =>
-    this.request(url, { ...options, method: METHODS.GET }, options.timeout)
+  get: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.GET }, options.timeout)
 
-  post = (url: string, options: IOptions = {} as IOptions) =>
-    this.request(url, { ...options, method: METHODS.POST }, options.timeout)
+  post: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.POST }, options.timeout)
 
-  put = (url: string, options: IOptions = {} as IOptions) =>
-    this.request(url, { ...options, method: METHODS.PUT }, options.timeout)
+  put: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.PUT }, options.timeout)
 
-  delete = (url: string, options: IOptions = {} as IOptions) =>
-    this.request(url, { ...options, method: METHODS.DELETE }, options.timeout)
+  delete: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.DELETE }, options.timeout)
 
   // eslint-disable-next-line class-methods-use-this
-  request = (url: string, options: IOptions, timeout = 5000) => {
+  private request = (url: string, options: IOptions, timeout = 5000) => {
     const { data = null, headers = {}, method } = options
 
     return new Promise((resolve, reject) => {

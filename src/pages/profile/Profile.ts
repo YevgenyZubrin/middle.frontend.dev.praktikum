@@ -71,7 +71,7 @@ export default class Profile extends Block<ProfileProps> {
       }),
       ChangePasswordForm: new ChangePasswordForm({
         onSubmit: (e: Event): void => {
-          const fields = this.children.ChangePasswordForm.children.formChildren.children
+          const fields = this.children.ChangePasswordForm.children
           this.onSubmitValidation(e, fields)
         },
       }),
@@ -81,7 +81,7 @@ export default class Profile extends Block<ProfileProps> {
   onSubmitValidation(e: Event, fields: Record<string, any>) {
     e.preventDefault()
     const validationResultList = e.target !== null ? getValidationResult(e.target) : []
-
+    console.log(validationResultList)
     if (!validationResultList.length) {
       this.setProps({
         editProfileMode: false,
@@ -91,7 +91,7 @@ export default class Profile extends Block<ProfileProps> {
       validationResultList.forEach((item) => {
         const [fieldName, errorText] = Object.entries(item).flat()
         const componentName = getName(fields, fieldName)
-
+        console.log(componentName)
         fields[componentName].setProps({
           message: {
             text: errorText,

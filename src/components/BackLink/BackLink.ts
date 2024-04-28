@@ -1,10 +1,19 @@
 import Block from '../../core/Block'
+import BackIcon from '../Icons/BackIcon'
 
-export default class BackLink extends Block {
+interface BackIconProps {
+  BackIcon?: BackIcon
+}
+
+export default class BackLink extends Block<BackIconProps> {
+  constructor(props: BackIconProps) {
+    super({ ...props, BackIcon: new BackIcon({}) })
+  }
+
   render() {
     return `
       <a class="back-link" href="/">
-        <img src="/src/public/images/svg/back.svg" alt="назад">
+        {{{ BackIcon }}}
       </a>
     `
   }
