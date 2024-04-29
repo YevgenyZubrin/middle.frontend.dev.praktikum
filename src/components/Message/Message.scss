@@ -1,0 +1,16 @@
+.message {
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.in {
+  align-self: flex-start;
+  background-color: $gray-20;
+  border-top-left-radius: 0;
+}
+
+.out {
+  align-self: flex-end;
+  background-color: $blue;
+  border-bottom-right-radius: 0;
+}

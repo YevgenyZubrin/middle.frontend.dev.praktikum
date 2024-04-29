@@ -1,0 +1,14 @@
+
+.icon-button {
+  display: flex;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  &__text {
+    margin-left: 8px !important;
+  }
+}

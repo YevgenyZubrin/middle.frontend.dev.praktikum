@@ -1,0 +1,17 @@
+.messages-per-day {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  &__date {
+    color: $gray-50;
+  }
+
+  &__messages-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 16px;
+    width: 100%;
+  }
+}
