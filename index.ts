@@ -1,53 +1,58 @@
-import Handlebars from 'handlebars'
 import * as Pages from './src/pages'
-import { chatList } from './src/public/constants'
+import Router from './src/core/Router'
 
-const pages = {
-  login: [Pages.LoginPage],
-  profile: [
-    Pages.ProfilePage,
-    {
-      firstName: 'Ивашка',
-      editProfileMode: false,
-      editPasswordMode: false,
-    },
-  ],
-  chats: [
-    Pages.ChatsPage,
-    {
-      chatList,
-      isSomeChatChoosed: false,
-    },
-  ],
-  Custom500: [Pages.Custom500],
-  Custom404: [Pages.Custom404],
-  nav: [Pages.NavigatePage],
-}
+// const pages = {
+//   login: [Pages.LoginPage],
+//   profile: [
+//     Pages.ProfilePage,
+//     // {
+//     //   firstName: 'Ивашка',
+//     //   editProfileMode: false,
+//     //   editPasswordMode: false,
+//     // },
+//   ],
+//   chats: [Pages.ChatsPage],
+//   Custom500: [Pages.Custom500],
+//   Custom404: [Pages.Custom404],
+//   nav: [Pages.NavigatePage],
+// }
 
-function navigate(page: string) {
-  const [Source, context] = pages[page]
-  const container = document.getElementById('app')!
+const router = Router.getInstance('#app')
 
-  if (Source instanceof Object) {
-    const somePage = new Source(context)
-    container.innerHTML = ''
-    container.append(somePage.getContent())
-    return
-  }
+router
+  .use('/', Pages.ChatsPage)
+  .use('/login', Pages.LoginPage)
+  .use('/profile', Pages.ProfilePage)
+  .use('/404', Pages.Custom404)
+  .use('/500', Pages.Custom500)
+  .start()
 
-  container.innerHTML = Handlebars.compile(Source)(context)
-}
+// console.log(router.routes)
 
-document.addEventListener('DOMContentLoaded', () => navigate('nav'))
+// function navigate(page: string) {
+//   const [Source, context] = pages[page]
+//   const container = document.getElementById('app')!
 
-document.addEventListener('click', (e: Event) => {
-  if (e.target instanceof HTMLElement) {
-    const page = e.target.getAttribute('page')
-    if (page) {
-      navigate(page)
+//   if (Source instanceof Object) {
+//     const somePage = new Source(context)
+//     container.innerHTML = ''
+//     container.append(somePage.getContent())
+//     return
+//   }
 
-      e.preventDefault()
-      e.stopImmediatePropagation()
-    }
-  }
-})
+//   container.innerHTML = Handlebars.compile(Source)(context)
+// }
+
+// document.addEventListener('DOMContentLoaded', () => navigate('nav'))
+
+// document.addEventListener('click', (e: Event) => {
+//   if (e.target instanceof HTMLElement) {
+//     const page = e.target.getAttribute('page')
+//     if (page) {
+//       navigate(page)
+
+//       e.preventDefault()
+//       e.stopImmediatePropagation()
+//     }
+//   }
+// })

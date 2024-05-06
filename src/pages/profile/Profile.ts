@@ -10,10 +10,10 @@ import { getName, getValidationResult } from '../../utils'
 Handlebars.registerHelper('neither', (a, b) => !a && !b)
 
 interface ProfileProps {
-  className: string
-  firstName: string
-  editPasswordMode: boolean
-  editProfileMode: boolean
+  className?: string
+  firstName?: string
+  editPasswordMode?: boolean
+  editProfileMode?: boolean
   ChangePasswordButton: Button
   ChangeDataButton: Button
   ExitButton: Button
@@ -26,7 +26,7 @@ interface ProfileProps {
 }
 
 export default class Profile extends Block<ProfileProps> {
-  constructor(props: ProfileProps) {
+  constructor(props?: ProfileProps) {
     super({
       ...props,
       ChangePasswordButton: new Button({
@@ -81,7 +81,7 @@ export default class Profile extends Block<ProfileProps> {
   onSubmitValidation(e: Event, fields: Record<string, any>) {
     e.preventDefault()
     const validationResultList = e.target !== null ? getValidationResult(e.target) : []
-    console.log(validationResultList)
+
     if (!validationResultList.length) {
       this.setProps({
         editProfileMode: false,
@@ -91,7 +91,7 @@ export default class Profile extends Block<ProfileProps> {
       validationResultList.forEach((item) => {
         const [fieldName, errorText] = Object.entries(item).flat()
         const componentName = getName(fields, fieldName)
-        console.log(componentName)
+
         fields[componentName].setProps({
           message: {
             text: errorText,
@@ -104,37 +104,39 @@ export default class Profile extends Block<ProfileProps> {
 
   render() {
     return `
-      <section class="profile">
-        {{{ BackLink }}}
-        <section class="profile__container">
-          <div class="profile__avatar-wrapper {{className}}">
-            {{{ Avatar }}}
+      <section>
+        <div class="profile">
+          {{{ BackLink }}}
+          <section class="profile__container">
+            <div class="profile__avatar-wrapper {{className}}">
+              {{{ Avatar }}}
 
-            {{#unless editProfileMode}}
-              <h1 class="profile__name">{{firstName}}</h1>
-            {{/unless}}
+              {{#unless editProfileMode}}
+                <h1 class="profile__name">{{firstName}}</h1>
+              {{/unless}}
 
-          </div>
-
-          {{#if editPasswordMode}}
-            {{{ ChangePasswordForm }}}
-          {{/if}}
-
-          {{#if editProfileMode}}
-            {{{ ChangeProfileForm }}}
-          {{/if}}
-          
-          {{#if (neither editPasswordMode editProfileMode)}}
-            {{{ ProfileFields }}}
-            <div>
-              {{{ ChangePasswordButton }}}
-              {{{ ChangeDataButton }}}
-              {{{ ExitButton }}}
             </div>
-          {{/if}}
+
+            {{#if editPasswordMode}}
+              {{{ ChangePasswordForm }}}
+            {{/if}}
+
+            {{#if editProfileMode}}
+              {{{ ChangeProfileForm }}}
+            {{/if}}
             
-          {{{ Modal }}}
-        </section>
+            {{#if (neither editPasswordMode editProfileMode)}}
+              {{{ ProfileFields }}}
+              <div>
+                {{{ ChangePasswordButton }}}
+                {{{ ChangeDataButton }}}
+                {{{ ExitButton }}}
+              </div>
+            {{/if}}
+              
+            {{{ Modal }}}
+          </section>
+        </div>
       </section>
     `
   }

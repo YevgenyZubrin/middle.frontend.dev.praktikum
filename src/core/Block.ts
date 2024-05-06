@@ -2,7 +2,7 @@ import Handlebars from 'handlebars'
 import { nanoid } from 'nanoid'
 import EventBus from './EventBus'
 
-const liveCycleEvents = {
+export const liveCycleEvents = {
   INIT: 'init',
   FLOW_CDM: 'flow:component-did-mount',
   FLOW_CDU: 'flow:component-did-update',
@@ -21,11 +21,11 @@ type TEventTypes = Values<typeof eventTypes>
 type Tevents = { [key in TEventTypes]: () => void }
 type TProps = {
   events?: Tevents
-} & Record<string, any>
+} & AnyProps
 
 // использую any потому что пропсы погут быть любыми
 
-export default class Block<Props extends Record<string, any> = Record<string, any>> {
+export default class Block<Props extends AnyProps = AnyProps> {
   private _element: Element | null = null
 
   children: TProps = {}

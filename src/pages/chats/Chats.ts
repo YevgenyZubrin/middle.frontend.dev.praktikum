@@ -7,13 +7,14 @@ import { ChatHeader } from '../../components/ChatHeader'
 import { ChatFooter } from '../../components/ChatFooter'
 import { AddOrDeleteUser } from '../../components/AddOrDeleteUser'
 import { Messages } from '../../components/Messages'
-import { IChatList } from '../../public/constants/chatList'
+import chatList, { IChatList } from '../../public/constants/chatList'
+import Router from '../../core/Router'
 
 interface ChatsPageProps {
-  chatList: IChatList[]
   isSomeChatChoosed: boolean
-  chatListKeys: string[]
+  chatsKeys: string[]
   ProfileButton: Button
+  AddChatButton: Button
   SearchInput: Input
   ChatHeader: ChatHeader
   ChatFooter: ChatFooter
@@ -24,20 +25,29 @@ interface ChatsPageProps {
 
 export default class ChatsPage extends Block<ChatsPageProps> {
   constructor(props: ChatsPageProps) {
-    const chatList = getComponentsList<IChatList>(props.chatList, Chat, {
+    const chats = getComponentsList<IChatList>(chatList, Chat, {
       onClick: () => {
-        this.setProps({ isSomeChatChoosed: true })
+        // this.setProps({ isSomeChatChoosed: true })
       },
     })
 
-    const choosedChat = props.chatList.find((item) => item.choosed)
-    const chatListKeys = Object.keys(chatList)
+    const choosedChat = chatList.find((item) => item.choosed)
+    const chatsKeys = Object.keys(chats)
     super({
       ...props,
-      chatListKeys,
+      chatsKeys,
       ProfileButton: new Button({
         text: 'Профиль',
         className: 'chats__profile-button',
+        onClick: () => {
+          Router.getInstance('#app').go('/profile')
+        },
+      }),
+      AddChatButton: new Button({
+        text: 'Добавить чат',
+        className: 'chats__add-chat-button',
+        filled: true,
+        onClick: () => {},
       }),
       SearchInput: new Input({
         id: 'search',
@@ -68,7 +78,7 @@ export default class ChatsPage extends Block<ChatsPageProps> {
         modalChildren: new AddOrDeleteUser({ isAddUser: false }),
       }),
       Messages: new Messages({ messages: choosedChat?.messages ?? [] }),
-      ...chatList,
+      ...chats,
     })
   }
 
@@ -78,10 +88,13 @@ export default class ChatsPage extends Block<ChatsPageProps> {
         <section class="chats__left-side">
           {{{ ProfileButton }}}
           <div class='chats__search'>
-            {{{ SearchInput }}}
+          {{{ SearchInput }}}
+          </div>
+          <div class='chats__add-chat'>
+          {{{ AddChatButton }}}
           </div>
           <ul class="chats__list">
-            ${(this.props.chatListKeys as string[]).map((key) => `{{{ ${key} }}}`).join('')}
+            ${(this.props.chatsKeys as string[]).map((key) => `{{{ ${key} }}}`).join('')}
           </ul>  
         </section>
         <section class="chats__right-side right-side">

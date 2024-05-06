@@ -13,7 +13,7 @@ interface MessagesPerDayProps {
 
 export default class MessagesPerDay extends Block<MessagesPerDayProps> {
   constructor(props: MessagesPerDayProps) {
-    const messagesPerDay = getComponentsList(props.messagesPerDay, Message)
+    const messagesPerDay = getComponentsList<IMessagesPerDay>(props.messagesPerDay, Message)
 
     super({
       ...props,

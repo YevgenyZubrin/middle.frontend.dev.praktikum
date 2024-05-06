@@ -42,10 +42,19 @@
     }
   }
 
-  &__search {
+  &__add-chat-button {
+    width: 100%;
+  }
+
+  &__search, 
+  &__add-chat {
     width: 100%;
     padding: 0 8px;
     box-sizing: border-box;
+  }
+
+  &__add-chat {
+    margin-bottom: 10px;
   }
 
   &__search-field {

@@ -1,7 +1,7 @@
 import Block from '../core/Block'
 
-const getComponentsList = <L>(list: L[], Component: new (...args: any[]) => Block, props: Record<string, any> = {}) => {
-  const fieldsComponents = list.reduce<Record<string, Block<Record<string, any>>>>((acc, data) => {
+const getComponentsList = <L>(list: L[], Component: new (...args: any[]) => Block, props: AnyProps = {}) => {
+  const fieldsComponents = list.reduce((acc: Record<string, Block<AnyProps>>, data) => {
     if (Component instanceof Object) {
       const element = new Component({
         ...data,

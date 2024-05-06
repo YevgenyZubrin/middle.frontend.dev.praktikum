@@ -21,21 +21,32 @@ function queryStringify(data: Document | XMLHttpRequestBodyInit | null) {
   return ''
 }
 
+interface RequestParams {
+  url: string
+  options: IOptions
+  timeout?: number
+  withCredentials?: boolean
+}
+
 interface MethodParams {
   (url: string, options: IOptions): void
 }
 
 class HTTPTransport {
-  get: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.GET }, options.timeout)
+  get: MethodParams = (url, options) =>
+    this.request({ url, options: { ...options, method: METHODS.GET }, timeout: options.timeout })
 
-  post: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.POST }, options.timeout)
+  post: MethodParams = (url, options) =>
+    this.request({ url, options: { ...options, method: METHODS.POST }, timeout: options.timeout })
 
-  put: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.PUT }, options.timeout)
+  put: MethodParams = (url, options) =>
+    this.request({ url, options: { ...options, method: METHODS.PUT }, timeout: options.timeout })
 
-  delete: MethodParams = (url, options) => this.request(url, { ...options, method: METHODS.DELETE }, options.timeout)
+  delete: MethodParams = (url, options) =>
+    this.request({ url, options: { ...options, method: METHODS.DELETE }, timeout: options.timeout })
 
   // eslint-disable-next-line class-methods-use-this
-  private request = (url: string, options: IOptions, timeout = 5000) => {
+  private request = ({ url, options, timeout = 5000, withCredentials = true }: RequestParams) => {
     const { data = null, headers = {}, method } = options
 
     return new Promise((resolve, reject) => {
@@ -61,12 +72,16 @@ class HTTPTransport {
       xhr.onerror = reject
 
       xhr.timeout = timeout
+      xhr.withCredentials = withCredentials
       xhr.ontimeout = reject
 
       if (!data || isGet) {
         xhr.send()
-      } else {
+      } else if (data instanceof FormData) {
         xhr.send(data)
+      } else {
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.send(JSON.stringify(data))
       }
     })
   }
