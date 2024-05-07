@@ -1,3 +1,3 @@
-import './Profile.scss'
+import './ProfilePage.scss'
 
-export { default as ProfilePage } from './Profile'
+export { default as ProfilePage } from './ProfilePage'

@@ -1,8 +1,9 @@
 import Block from '../../core/Block'
-import { Button } from '../../components'
-import { FormSignUp } from '../../components/FormSignUp'
-import { FormSignIn } from '../../components/FormSignIn'
+import { Button } from '..'
+import { FormSignUp } from '../FormSignUp'
+import { FormSignIn } from '../FormSignIn'
 import { getName, getValidationResult } from '../../utils'
+import store from '../../core/Store'
 
 export interface LoginProps {
   AddAccountButton?: Button
@@ -11,15 +12,16 @@ export interface LoginProps {
   FormSignIn?: FormSignIn
 }
 
-export default class LoginPage extends Block<LoginProps> {
-  constructor(props: LoginProps) {
+class Login extends Block<LoginProps> {
+  constructor(props?: LoginProps) {
     super({
       ...props,
       AddAccountButton: new Button({
         filled: false,
         text: 'Нет аккаунта?',
         onClick: () => {
-          this.setProps({ isRegistration: true })
+          store.setState('isRegistration', true)
+          // this.setProps({ isRegistration: true })
         },
       }),
       SignInButton: new Button({
@@ -94,3 +96,5 @@ export default class LoginPage extends Block<LoginProps> {
       </section>`
   }
 }
+
+export default Login

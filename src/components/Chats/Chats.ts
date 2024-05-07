@@ -1,30 +1,30 @@
-import { Button, Modal } from '../../components'
+import { Button, Modal } from '..'
 import Block from '../../core/Block'
 import { getComponentsList } from '../../utils'
-import { Chat } from '../../components/Chat'
-import { Input } from '../../components/Input'
-import { ChatHeader } from '../../components/ChatHeader'
-import { ChatFooter } from '../../components/ChatFooter'
-import { AddOrDeleteUser } from '../../components/AddOrDeleteUser'
-import { Messages } from '../../components/Messages'
+import { Chat } from '../Chat'
+import { Input } from '../Input'
+import { ChatHeader } from '../ChatHeader'
+import { ChatFooter } from '../ChatFooter'
+import { AddOrDeleteUser } from '../AddOrDeleteUser'
+import { Messages } from '../Messages'
 import chatList, { IChatList } from '../../public/constants/chatList'
 import Router from '../../core/Router'
 
-interface ChatsPageProps {
-  isSomeChatChoosed: boolean
-  chatsKeys: string[]
-  ProfileButton: Button
-  AddChatButton: Button
-  SearchInput: Input
-  ChatHeader: ChatHeader
-  ChatFooter: ChatFooter
-  AddUserModal: Modal
-  RemoveUserModal: Modal
-  Messages: Messages
+interface ChatsProps {
+  isSomeChatChoosed?: boolean
+  chatsKeys?: string[]
+  ProfileButton?: Button
+  AddChatButton?: Button
+  SearchInput?: Input
+  ChatHeader?: ChatHeader
+  ChatFooter?: ChatFooter
+  AddUserModal?: Modal
+  RemoveUserModal?: Modal
+  Messages?: Messages
 }
 
-export default class ChatsPage extends Block<ChatsPageProps> {
-  constructor(props: ChatsPageProps) {
+export default class Chats extends Block<ChatsProps> {
+  constructor(props: ChatsProps) {
     const chats = getComponentsList<IChatList>(chatList, Chat, {
       onClick: () => {
         // this.setProps({ isSomeChatChoosed: true })

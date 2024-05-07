@@ -1,4 +1,3 @@
-// export {default as LoginPage} from ''
-import './Login.scss'
+import './LoginPage.scss'
 
-export { default as LoginPage } from './Login'
+export { default as LoginPage } from './LoginPage'

@@ -1,10 +1,10 @@
 import Handlebars from 'handlebars'
-import { ChangeAvatarModal } from '../../components/ChangeAvatarModal'
+import { ChangeAvatarModal } from '../ChangeAvatarModal'
 import Block from '../../core/Block'
-import { Button, BackLink, Avatar, Modal } from '../../components'
-import { ProfileFields } from '../../components/ProfileFields'
-import { ChangeProfileForm } from '../../components/ChangeProfileForm'
-import { ChangePasswordForm } from '../../components/ChangePasswordForm'
+import { Button, BackLink, Avatar, Modal } from '..'
+import { ProfileFields } from '../ProfileFields'
+import { ChangeProfileForm } from '../ChangeProfileForm'
+import { ChangePasswordForm } from '../ChangePasswordForm'
 import { getName, getValidationResult } from '../../utils'
 
 Handlebars.registerHelper('neither', (a, b) => !a && !b)
@@ -14,15 +14,15 @@ interface ProfileProps {
   firstName?: string
   editPasswordMode?: boolean
   editProfileMode?: boolean
-  ChangePasswordButton: Button
-  ChangeDataButton: Button
-  ExitButton: Button
-  BackLink: BackLink
-  Avatar: Avatar
-  Modal: Modal
-  ProfileFields: ProfileFields
-  ChangeProfileForm: ChangeProfileForm
-  ChangePasswordForm: ChangePasswordForm
+  ChangePasswordButton?: Button
+  ChangeDataButton?: Button
+  ExitButton?: Button
+  BackLink?: BackLink
+  Avatar?: Avatar
+  Modal?: Modal
+  ProfileFields?: ProfileFields
+  ChangeProfileForm?: ChangeProfileForm
+  ChangePasswordForm?: ChangePasswordForm
 }
 
 export default class Profile extends Block<ProfileProps> {
