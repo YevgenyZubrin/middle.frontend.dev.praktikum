@@ -1,16 +1,6 @@
 import Block from '../../core/Block'
 import { Typography } from '../Typography'
-
-interface IconButtonProps {
-  className?: string
-  icon: Block
-  text?: string
-  onClick?: () => void
-  Text?: Typography
-  events?: {
-    click: () => void
-  }
-}
+import { IconButtonProps } from './interfaces'
 
 export default class IconButton extends Block<IconButtonProps> {
   constructor(props: IconButtonProps) {

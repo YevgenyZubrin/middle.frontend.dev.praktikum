@@ -6,7 +6,7 @@ const METHODS = {
 } as const
 
 interface IOptions {
-  data?: Document | XMLHttpRequestBodyInit | null
+  data?: any
   headers?: Record<string, string>
   timeout?: number
   method: keyof typeof METHODS
@@ -26,30 +26,38 @@ interface RequestParams {
   options: IOptions
   timeout?: number
   withCredentials?: boolean
+  queryParams?: string[]
 }
 
 interface MethodParams {
-  (url: string, options: IOptions): void
+  (url: string, options: Omit<IOptions, 'method'>): Promise<string>
 }
 
+export const mainUrl = 'https://ya-praktikum.tech/api/v2'
+
 class HTTPTransport {
+  private apiUrl: string = ''
+
+  constructor(apiPath: string) {
+    this.apiUrl = mainUrl + apiPath
+  }
+
   get: MethodParams = (url, options) =>
-    this.request({ url, options: { ...options, method: METHODS.GET }, timeout: options.timeout })
+    this.request({ url: this.apiUrl + url, options: { ...options, method: METHODS.GET }, timeout: options.timeout })
 
   post: MethodParams = (url, options) =>
-    this.request({ url, options: { ...options, method: METHODS.POST }, timeout: options.timeout })
+    this.request({ url: this.apiUrl + url, options: { ...options, method: METHODS.POST }, timeout: options.timeout })
 
   put: MethodParams = (url, options) =>
-    this.request({ url, options: { ...options, method: METHODS.PUT }, timeout: options.timeout })
+    this.request({ url: this.apiUrl + url, options: { ...options, method: METHODS.PUT }, timeout: options.timeout })
 
   delete: MethodParams = (url, options) =>
-    this.request({ url, options: { ...options, method: METHODS.DELETE }, timeout: options.timeout })
+    this.request({ url: this.apiUrl + url, options: { ...options, method: METHODS.DELETE }, timeout: options.timeout })
 
-  // eslint-disable-next-line class-methods-use-this
   private request = ({ url, options, timeout = 5000, withCredentials = true }: RequestParams) => {
     const { data = null, headers = {}, method } = options
 
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       if (!method) {
         reject(new Error('No method'))
         return
@@ -65,7 +73,11 @@ class HTTPTransport {
       })
 
       xhr.onload = () => {
-        resolve(xhr)
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response)
+        } else {
+          reject(new Error(xhr.response))
+        }
       }
 
       xhr.onabort = reject

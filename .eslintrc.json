@@ -19,6 +19,7 @@
     "prettier"
   ],
   "rules": {
+    "class-methods-use-this": "off",
     "no-prototype-builtins": "off",
     "no-restricted-syntax": "off",
     "implicit-arrow-linebreak": "off",

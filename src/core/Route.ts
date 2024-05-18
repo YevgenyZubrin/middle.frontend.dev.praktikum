@@ -9,7 +9,6 @@ class Route {
 
   private _props: AnyProps
 
-  // constructor(pathname: string, view: typeof Block, props: Record<string, any>) {
   constructor(pathname: string, view: typeof Block, props: AnyProps) {
     this._pathname = pathname
     this._blockClass = view
@@ -34,7 +33,6 @@ class Route {
     return pathname === this._pathname
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private _renderDom(query: string, block: Block) {
     const root = document.querySelector(query)
     const content = block.getContent()
@@ -48,13 +46,10 @@ class Route {
     if (!this._block) {
       this._block = new this._blockClass()
       this._renderDom(this._props.rootQuery, this._block)
-      // this._block._render() // было так - render(this._props.rootQuery, this._block)
       return
     }
 
     this._block.show()
-    // this._renderDom(this._props.rootQuery, this._block)
-    // this._block._render() // было так - render(this._props.rootQuery, this._block)
   }
 }
 

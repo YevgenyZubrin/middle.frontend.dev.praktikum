@@ -1,14 +1,10 @@
 import Block from '../../core/Block'
 import BackIcon from '../Icons/BackIcon'
 import Router from '../../core/Router'
+import { BackLinkProps } from './interfaces'
 
-interface BackIconProps {
-  BackIcon?: BackIcon
-  events?: { click: () => void }
-}
-
-export default class BackLink extends Block<BackIconProps> {
-  constructor(props: BackIconProps) {
+export default class BackLink extends Block<BackLinkProps> {
+  constructor(props: BackLinkProps) {
     super({
       ...props,
       events: {

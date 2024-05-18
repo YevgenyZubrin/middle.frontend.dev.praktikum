@@ -15,8 +15,6 @@ class Router {
 
   private constructor(rootQuery: string) {
     this._rootQuery = rootQuery
-    // eslint-disable-next-line no-useless-constructor, no-empty-function
-    // private constructor() {}
   }
 
   public static getInstance(rootQuery: string): Router {
@@ -52,7 +50,7 @@ class Router {
     }
 
     this._currentRoute = route
-    route.navigate(pathname)
+    route.render()
   }
 
   go(pathname: string) {
@@ -69,7 +67,11 @@ class Router {
   }
 
   getRoute(pathname: string) {
-    return this.routes.find((route) => route.match(pathname))
+    const route = this.routes.find((item) => item.match(pathname))
+    if (!route) {
+      return this.routes.find((item) => item.match('/404'))
+    }
+    return route
   }
 }
 

@@ -1,14 +1,7 @@
 import Block from '../../core/Block'
+import { ButtonProps } from './interfaces'
 
-interface ButtonProps {
-  events?: { click: () => void }
-  onClick?: () => void
-  filled?: boolean
-  className?: string
-  text: string
-}
-
-export default class Button extends Block<ButtonProps> {
+class Button extends Block<ButtonProps> {
   constructor(props: ButtonProps) {
     super({
       ...props,
@@ -17,6 +10,16 @@ export default class Button extends Block<ButtonProps> {
   }
 
   render() {
-    return '<button class="button{{#if filled}} button_filled{{/if}} {{className}}">{{text}}</button>'
+    return `
+      <button class="button{{#if filled}} button_filled{{/if}} {{className}}" {{#if isDisabled}}disabled{{/if}}>
+        {{#if isLoading}}
+          {{{ Spinner }}}
+        {{else}}
+          {{text}}
+        {{/if}}
+      </button>
+      `
   }
 }
+
+export default Button

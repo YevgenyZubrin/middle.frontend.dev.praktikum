@@ -1,9 +1,5 @@
 import Block from '../../core/Block'
-
-interface TypographyProps {
-  className?: string
-  text: string
-}
+import { TypographyProps } from './interfaces'
 
 export default class Typography extends Block<TypographyProps> {
   constructor(props: TypographyProps) {

@@ -1,9 +1,6 @@
 import Block from '../../core/Block'
 import { Login } from '../../components/Login'
-
-export interface LoginPageProps {
-  Login?: Login
-}
+import { LoginPageProps } from './interfaces'
 
 class LoginPage extends Block<LoginPageProps> {
   constructor(props?: LoginPageProps) {

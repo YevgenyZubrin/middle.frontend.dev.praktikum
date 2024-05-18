@@ -3,29 +3,20 @@ import { ChangeAvatarModal } from '../ChangeAvatarModal'
 import Block from '../../core/Block'
 import { Button, BackLink, Avatar, Modal } from '..'
 import { ProfileFields } from '../ProfileFields'
-import { ChangeProfileForm } from '../ChangeProfileForm'
-import { ChangePasswordForm } from '../ChangePasswordForm'
-import { getName, getValidationResult } from '../../utils'
+import { connect } from '../../utils'
+import { getUserInfo, logout } from '../../controller/auth'
+import { ProfileInfo } from '../ProfileInfo'
+import { changeAvatar } from '../../controller/user'
+import Router from '../../core/Router'
+import { ChangePassword } from '../ChangePassword'
+import { ChangeProfile } from '../ChangeProfile'
+import { ProfileProps } from './interfaces'
 
 Handlebars.registerHelper('neither', (a, b) => !a && !b)
 
-interface ProfileProps {
-  className?: string
-  firstName?: string
-  editPasswordMode?: boolean
-  editProfileMode?: boolean
-  ChangePasswordButton?: Button
-  ChangeDataButton?: Button
-  ExitButton?: Button
-  BackLink?: BackLink
-  Avatar?: Avatar
-  Modal?: Modal
-  ProfileFields?: ProfileFields
-  ChangeProfileForm?: ChangeProfileForm
-  ChangePasswordForm?: ChangePasswordForm
-}
+const router = Router.getInstance('#app')
 
-export default class Profile extends Block<ProfileProps> {
+class Profile extends Block<ProfileProps> {
   constructor(props?: ProfileProps) {
     super({
       ...props,
@@ -33,19 +24,22 @@ export default class Profile extends Block<ProfileProps> {
         className: 'profile__button',
         text: 'Изменить пароль',
         onClick: () => {
-          this.setProps({ editPasswordMode: true })
+          this.props.setIsPasswordChange(true)
         },
       }),
       ChangeDataButton: new Button({
         className: 'profile__button',
         text: 'Изменить данные',
         onClick: () => {
-          this.setProps({ editProfileMode: true })
+          this.props.setIsProfileChange(true)
         },
       }),
       ExitButton: new Button({
         className: 'profile__button profile__button_red',
         text: 'Выйти',
+        onClick: () => {
+          logout()
+        },
       }),
       BackLink: new BackLink({}),
       Avatar: new Avatar({
@@ -55,51 +49,40 @@ export default class Profile extends Block<ProfileProps> {
       }),
       Modal: new Modal({
         isOpen: false,
+        closeModal: (e: Event) => {
+          if (e.target instanceof HTMLElement && e.target?.classList.value.match('modal__overlay')) {
+            this.children.Modal.setProps({ isOpen: false })
+          }
+        },
         modalChildren: new ChangeAvatarModal({
           choosedFileName: '',
-          isChooseFileError: false,
           isFileLoadError: false,
+          onSubmit: (e: Event) => {
+            e.preventDefault()
+            if (this.props.avatarFileName && e.target instanceof HTMLFormElement) {
+              const formData = new FormData(e.target)
+              changeAvatar(formData)
+            } else {
+              this.props.setIsChooseFileErrore(true)
+            }
+          },
         }),
         className: 'profile__modal',
       }),
       ProfileFields: new ProfileFields({}),
-      ChangeProfileForm: new ChangeProfileForm({
-        onSubmit: (e: Event): void => {
-          const fields = this.children.ChangeProfileForm.children.ProfileFields.children
-          this.onSubmitValidation(e, fields)
-        },
-      }),
-      ChangePasswordForm: new ChangePasswordForm({
-        onSubmit: (e: Event): void => {
-          const fields = this.children.ChangePasswordForm.children
-          this.onSubmitValidation(e, fields)
-        },
-      }),
+      ChangeProfile: new ChangeProfile({}),
+      ChangePassword: new ChangePassword({}),
+      ProfileInfo: new ProfileInfo({}),
     })
   }
 
-  onSubmitValidation(e: Event, fields: Record<string, any>) {
-    e.preventDefault()
-    const validationResultList = e.target !== null ? getValidationResult(e.target) : []
-
-    if (!validationResultList.length) {
-      this.setProps({
-        editProfileMode: false,
-        editPasswordMode: false,
-      })
-    } else {
-      validationResultList.forEach((item) => {
-        const [fieldName, errorText] = Object.entries(item).flat()
-        const componentName = getName(fields, fieldName)
-
-        fields[componentName].setProps({
-          message: {
-            text: errorText,
-            type: 'error',
-          },
-        })
-      })
+  init(): void {
+    const checkIsSignedIn = async () => {
+      if (!(await getUserInfo())) {
+        router.go('/')
+      }
     }
+    checkIsSignedIn()
   }
 
   render() {
@@ -111,22 +94,35 @@ export default class Profile extends Block<ProfileProps> {
             <div class="profile__avatar-wrapper {{className}}">
               {{{ Avatar }}}
 
-              {{#unless editProfileMode}}
-                <h1 class="profile__name">{{firstName}}</h1>
+              {{#unless isProfileChange}}
+                <h1 class="profile__name">{{user.values.first_name}}</h1>
               {{/unless}}
 
             </div>
 
-            {{#if editPasswordMode}}
-              {{{ ChangePasswordForm }}}
+            {{#if isPasswordChange}}
+              {{{ ChangePassword }}}
+
+              {{#if changePasswordError}}
+                <p class='profile__error'>
+                  {{changePasswordError}}
+                </p>
+              {{/if}}
             {{/if}}
 
-            {{#if editProfileMode}}
-              {{{ ChangeProfileForm }}}
+            {{#if isProfileChange}}
+              {{{ ChangeProfile }}}
+
+              {{#if changeProfileError}}
+                <p class='profile__error'>
+                  {{changeProfileError}}
+                </p>
+              {{/if}}
             {{/if}}
-            
-            {{#if (neither editPasswordMode editProfileMode)}}
-              {{{ ProfileFields }}}
+              
+            {{#if (neither isPasswordChange isProfileChange)}}
+              {{{ ProfileInfo }}}
+
               <div>
                 {{{ ChangePasswordButton }}}
                 {{{ ChangeDataButton }}}
@@ -134,6 +130,11 @@ export default class Profile extends Block<ProfileProps> {
               </div>
             {{/if}}
               
+            {{#if isLoading}}
+              <p class='profile__loading'>
+                Загрузка...
+              </p>
+            {{/if}}
             {{{ Modal }}}
           </section>
         </div>
@@ -141,3 +142,19 @@ export default class Profile extends Block<ProfileProps> {
     `
   }
 }
+
+export default connect(
+  ({ isLoading, isProfileChange, isPasswordChange, avatarFileName, changeProfileError, changePasswordError }) => ({
+    isLoading,
+    isProfileChange,
+    isPasswordChange,
+    avatarFileName,
+    changeProfileError,
+    changePasswordError,
+  }),
+  {
+    setIsProfileChange: (dispatch, value) => dispatch({ isProfileChange: value }),
+    setIsPasswordChange: (dispatch, value) => dispatch({ isPasswordChange: value }),
+    setIsChooseFileErrore: (dispatch, value) => dispatch({ isChooseFileError: value }),
+  },
+)(Profile)

@@ -1,9 +1,6 @@
 import Block from '../../core/Block'
 import { ErrorBlock } from '../../components'
-
-interface Custom404Props {
-  ErrorBlock: Block
-}
+import { Custom404Props } from './interfaces'
 
 export default class Custom404 extends Block<Custom404Props> {
   constructor(props: Custom404Props) {

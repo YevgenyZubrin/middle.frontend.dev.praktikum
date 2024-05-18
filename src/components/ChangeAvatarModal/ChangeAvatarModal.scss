@@ -16,20 +16,25 @@
   }
 
   &__choose-file-button {
+    display: block;
+    cursor: pointer;
     padding: 0 70px !important;
     margin-bottom: 30px;
     text-decoration: underline;
     font-size: 12px;
     line-height: 16px;
+    color: $blue-10;
+    text-align: center;
+
+    &_file-choosed {
+      cursor: pointer;
+      margin-bottom: 30px;
+      color: $gray-60;
+    }
   }
 
   &__change-button {
     width: 100%;
-  }
-
-  &__image-name {
-    margin-bottom: 30px;
-    color: $gray-60;
   }
 
   &__error-message {

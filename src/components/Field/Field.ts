@@ -1,20 +1,9 @@
 import { Input } from '../Input'
 import Block from '../../core/Block'
+import { isEqual } from '../../utils'
+import { FieldProps } from './interfaces'
 
-interface FieldProps {
-  isProfile?: boolean
-  className?: string
-  id: string
-  labelText: string
-  message?: { text: string; type: string }
-  Input?: Input
-  onBlur?: (e: Event) => void
-  type: string
-  disabled?: boolean
-  ProfileInput?: Input
-}
-
-export default class Field extends Block<FieldProps> {
+class Field extends Block<FieldProps> {
   constructor(props: FieldProps) {
     super({
       ...props,
@@ -22,6 +11,7 @@ export default class Field extends Block<FieldProps> {
         ...props,
         className: 'field__input',
         events: {
+          change: props.onChange || (() => {}),
           blur: props.onBlur || (() => {}),
         },
       }),
@@ -29,10 +19,22 @@ export default class Field extends Block<FieldProps> {
         ...props,
         className: 'field__input_profile',
         events: {
+          change: props.onChange || (() => {}),
           blur: props.onBlur || (() => {}),
         },
       }),
     })
+  }
+
+  componentDidUpdate(oldProps: AnyProps, newProps: AnyProps): boolean {
+    if (!isEqual(oldProps, newProps)) {
+      if (this.props.isProfile) {
+        this.children.ProfileInput.setProps({ value: newProps.value })
+      } else {
+        this.children.Input.setProps({ value: newProps.value })
+      }
+    }
+    return true
   }
 
   render() {
@@ -46,10 +48,12 @@ export default class Field extends Block<FieldProps> {
         {{else}}
           {{{ Input }}}
         {{/if}}
-        {{#if message.text}}
-          <p class="field__message {{message.type}}">{{message.text}}</p>
+        {{#if message}}
+          <p class="field__message error">{{message}}</p>
         {{/if}}
       </div>
     `
   }
 }
+
+export default Field

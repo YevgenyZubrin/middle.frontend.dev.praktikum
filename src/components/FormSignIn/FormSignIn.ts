@@ -1,24 +1,18 @@
 import Block from '../../core/Block'
-import { validate } from '../../utils'
+import { connect, validate } from '../../utils'
 import { Button } from '../Button'
-import { Field } from '../Field'
+import SignInLoginField from './fields/SignInLoginField'
+import SignInPasswordField from './fields/SignInPasswordField'
+import { FormSignInProps } from './interfaces'
 
-interface FormSignInProps {
-  events?: { submit: (e: Event) => void }
-  onSubmit?: (e: Event) => void
-  LoginField?: Field
-  PasswordField?: Field
-  SubmitButton?: Button
-}
-
-export default class FormSignIn extends Block<FormSignInProps> {
+class FormSignIn extends Block<FormSignInProps> {
   constructor(props: FormSignInProps) {
     super({
       ...props,
       events: {
         submit: props.onSubmit || (() => {}),
       },
-      LoginField: new Field({
+      LoginField: new SignInLoginField({
         id: 'login',
         labelText: 'Логин',
         type: 'text',
@@ -28,8 +22,9 @@ export default class FormSignIn extends Block<FormSignInProps> {
             this.validateField('login', e.target.value)
           }
         },
+        value: props.signInForm.values.login,
       }),
-      PasswordField: new Field({
+      PasswordField: new SignInPasswordField({
         id: 'password',
         labelText: 'Пароль',
         type: 'password',
@@ -39,6 +34,7 @@ export default class FormSignIn extends Block<FormSignInProps> {
             this.validateField('password', e.target.value)
           }
         },
+        value: props.signInForm.values.password,
       }),
       SubmitButton: new Button({
         filled: true,
@@ -49,25 +45,11 @@ export default class FormSignIn extends Block<FormSignInProps> {
   }
 
   validateField(fieldName: string, value: string) {
-    const componentName =
-      Object.entries(this.children)
-        .map(([name, component]) => ({ name, props: component.props }))
-        .find((item) => item.props.id === fieldName)?.name ?? ''
-
     const errorText = validate(fieldName, value)
-
-    if (errorText) {
-      this.children[componentName].setProps({
-        message: {
-          text: errorText,
-          type: 'error',
-        },
-      })
-    } else {
-      this.children[componentName].setProps({
-        message: {},
-      })
-    }
+    this.props.setSignInForm({
+      errors: { ...this.props.signInForm.errors, [fieldName]: errorText },
+      values: { ...this.props.signInForm.values, [fieldName]: value },
+    })
   }
 
   render() {
@@ -81,3 +63,7 @@ export default class FormSignIn extends Block<FormSignInProps> {
     `
   }
 }
+
+export default connect(({ signInForm }) => ({ signInForm }), {
+  setSignInForm: (dispatch, value) => dispatch({ signInForm: value }),
+})(FormSignIn)

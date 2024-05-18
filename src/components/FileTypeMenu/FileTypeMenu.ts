@@ -2,12 +2,7 @@ import Block from '../../core/Block'
 import { getComponentsList } from '../../utils'
 import { FileIcon, LocationIcon, MediaIcon } from '../Icons'
 import { IconButton } from '../IconButton'
-
-interface FileTypeList {
-  text: string
-  icon: MediaIcon | FileIcon | LocationIcon
-  className: string
-}
+import { FileTypeList } from './interfaces'
 
 export default class FileTypeMenu extends Block {
   constructor(props = {}) {

@@ -1,15 +1,9 @@
 import Block from '../../core/Block'
 import { Button } from '../Button'
 import SignUpFields from '../SignUpFeilds/SignUpFeilds'
+import { FormSignUpProps } from './interfaces'
 
-interface FormSignUpProps {
-  events?: { submit: (e: Event) => void }
-  onSubmit?: (e: Event) => void
-  SignUpFields?: SignUpFields
-  SignUpButton?: Button
-}
-
-export default class FormSignUp extends Block<FormSignUpProps> {
+class FormSignUp extends Block<FormSignUpProps> {
   constructor(props: FormSignUpProps) {
     super({
       ...props,
@@ -29,9 +23,10 @@ export default class FormSignUp extends Block<FormSignUpProps> {
     return `
       <form>
         {{{ SignUpFields }}}
-
         {{{ SignUpButton }}}
       </form>
     `
   }
 }
+
+export default FormSignUp

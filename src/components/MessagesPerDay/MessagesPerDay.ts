@@ -1,40 +1,34 @@
 import Block from '../../core/Block'
-import { IMessagesPerDay } from '../../public/constants/chatList'
-import { getComponentsList } from '../../utils'
-import { Message } from '../Message'
+import { connect, getDate } from '../../utils'
 import { Typography } from '../Typography'
+import { MessagesPerDayProps } from './interfaces'
 
-interface MessagesPerDayProps {
-  Date: Typography
-  messagesPerDayKeys: string[]
-  date: string
-  messagesPerDay: IMessagesPerDay[]
-}
-
-export default class MessagesPerDay extends Block<MessagesPerDayProps> {
+class MessagesPerDay extends Block<MessagesPerDayProps> {
   constructor(props: MessagesPerDayProps) {
-    const messagesPerDay = getComponentsList<IMessagesPerDay>(props.messagesPerDay, Message)
-
     super({
       ...props,
       Date: new Typography({
-        text: props.date,
+        text: getDate(new Date()),
         className: 'messages-per-day__date',
       }),
-      messagesPerDayKeys: Object.keys(messagesPerDay),
-      ...messagesPerDay,
     })
   }
 
   render() {
+    const shouldRenderDate = this.props.messages.length > 0
+
     return `
       <div class="messages-per-day">
-        {{{ Date }}}
+        {{#if ${shouldRenderDate}}}
+          {{{ Date }}}
+        {{/if}}
 
         <div class="messages-per-day__messages-wrapper">
-          ${(this.props.messagesPerDayKeys as string[]).map((key) => `{{{ ${key} }}}`).join('')}
+          {{{ messageList }}}
         </div>
       </div>
     `
   }
 }
+
+export default connect(({ messages }) => ({ messages }))(MessagesPerDay)

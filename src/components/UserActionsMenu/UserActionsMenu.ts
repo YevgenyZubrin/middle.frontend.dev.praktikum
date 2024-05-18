@@ -1,13 +1,7 @@
 import Block from '../../core/Block'
-import { getComponentsList } from '../../utils'
+import { connect, getComponentsList } from '../../utils'
 import { CrossIcon, PlusIcon } from '../Icons'
 import { IconButton } from '../IconButton'
-
-interface UserActionsMenuProps {
-  onAddUserModalOpen?: () => void
-  onRemoveUserModalOpen?: () => void
-  actionListKey?: string[]
-}
 
 interface UserActionList {
   text: string
@@ -16,17 +10,16 @@ interface UserActionList {
   onClick?: () => void
 }
 
-export default class UserActionsMenu extends Block<UserActionsMenuProps> {
-  constructor(props: UserActionsMenuProps) {
+class UserActionsMenu extends Block {
+  constructor(props = {}) {
     const userActionList: UserActionList[] = [
       {
         text: 'Добавить пользователя',
         icon: new PlusIcon({}),
         className: 'user-actions-menu__button',
         onClick: () => {
-          if (props.onAddUserModalOpen) {
-            props.onAddUserModalOpen()
-          }
+          this.props.openCloseAddUserModal(true)
+          this.props.setIsUserActionMenuOpen(false)
         },
       },
       {
@@ -34,9 +27,8 @@ export default class UserActionsMenu extends Block<UserActionsMenuProps> {
         icon: new CrossIcon({}),
         className: 'user-actions-menu__button',
         onClick: () => {
-          if (props.onRemoveUserModalOpen) {
-            props.onRemoveUserModalOpen()
-          }
+          this.props.openCloseDeleteUserModal(true)
+          this.props.setIsUserActionMenuOpen(false)
         },
       },
     ]
@@ -58,3 +50,16 @@ export default class UserActionsMenu extends Block<UserActionsMenuProps> {
     `
   }
 }
+
+export default connect(
+  ({ isAddUserToChatModalOpen, isDeleteUserToChatModalOpen, isUserActionMenuOpen }) => ({
+    isAddUserToChatModalOpen,
+    isDeleteUserToChatModalOpen,
+    isUserActionMenuOpen,
+  }),
+  {
+    openCloseAddUserModal: (dispatch, value) => dispatch({ isAddUserToChatModalOpen: value }),
+    openCloseDeleteUserModal: (dispatch, value) => dispatch({ isDeleteUserToChatModalOpen: value }),
+    setIsUserActionMenuOpen: (dispatch, value) => dispatch({ isUserActionMenuOpen: value }),
+  },
+)(UserActionsMenu)

@@ -1,15 +1,10 @@
 import Block from '../../core/Block'
+import { connect } from '../../utils'
 import { Button } from '../Button'
 import { ProfileFields } from '../ProfileFields'
+import { ChangeProfileFormProps } from './interfaces'
 
-interface ChangeProfileFormProps {
-  events?: { submit: (e: Event) => void }
-  onSubmit: (e: Event) => void
-  SaveButton?: Button
-  ProfileFields?: ProfileFields
-}
-
-export default class ChangeProfileForm extends Block<ChangeProfileFormProps> {
+class ChangeProfileForm extends Block<ChangeProfileFormProps> {
   constructor(props: ChangeProfileFormProps) {
     super({
       ...props,
@@ -34,14 +29,14 @@ export default class ChangeProfileForm extends Block<ChangeProfileFormProps> {
   render() {
     return `
       <form class='change-profile-form'>
-      
         {{{ ProfileFields }}}
-
-        <div class="change-profile-form__button-wrapper">
+        
+        <div class='change-profile-form__button-wrapper'>
           {{{ SaveButton }}}
         </div>
-
       </form>
     `
   }
 }
+
+export default connect(({ user }) => ({ user }))(ChangeProfileForm)

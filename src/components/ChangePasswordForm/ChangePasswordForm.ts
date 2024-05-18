@@ -1,28 +1,22 @@
 import Block from '../../core/Block'
-import { validate } from '../../utils'
+import { connect, validate } from '../../utils'
 import { Button } from '../Button'
-import { Field } from '../Field'
+import ConfirmPasswordField from './fields/ConfirmPasswordField'
+import NewPasswordField from './fields/NewPasswordField'
+import OldPasswordField from './fields/OldPasswordField'
+import { ChangePasswordFormProps } from './interfaces'
 
-interface ChangePasswordFormProps {
-  events?: { submit: (e: Event) => void }
-  onSubmit: (e: Event) => void
-  OldPasswordField?: Field
-  NewPasswordField?: Field
-  ConfirmPasswordField?: Field
-  SaveButton?: Button
-}
-
-export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
+class ChangePasswordForm extends Block<ChangePasswordFormProps> {
   constructor(props: ChangePasswordFormProps) {
     super({
       ...props,
       events: {
         submit: props.onSubmit || (() => {}),
       },
-      OldPasswordField: new Field({
+      OldPasswordField: new OldPasswordField({
         onBlur: (e: Event) => {
           if (e.target && e.target instanceof HTMLInputElement) {
-            this.validatePassword('oldPassword', e.target.value)
+            this.validateField('oldPassword', e.target.value)
           }
         },
         className: 'change-password-form__field',
@@ -30,11 +24,12 @@ export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
         labelText: 'Старый пароль',
         type: 'password',
         disabled: false,
+        value: props.passwordForm.values.oldPassword,
       }),
-      NewPasswordField: new Field({
+      NewPasswordField: new NewPasswordField({
         onBlur: (e: Event) => {
           if (e.target && e.target instanceof HTMLInputElement) {
-            this.validatePassword('newPassword', e.target.value)
+            this.validateField('newPassword', e.target.value)
           }
         },
         className: 'change-password-form__field',
@@ -42,11 +37,12 @@ export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
         labelText: 'Новый пароль',
         type: 'password',
         disabled: false,
+        value: props.passwordForm.values.newPassword,
       }),
-      ConfirmPasswordField: new Field({
+      ConfirmPasswordField: new ConfirmPasswordField({
         onBlur: (e: Event) => {
           if (e.target && e.target instanceof HTMLInputElement) {
-            this.validatePassword('confirmPassword', e.target.value)
+            this.validateField('confirmPassword', e.target.value)
           }
         },
         className: 'change-password-form__field',
@@ -54,6 +50,7 @@ export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
         labelText: 'Подтвердить пароль',
         type: 'password',
         disabled: false,
+        value: props.passwordForm.values.confirmPassword,
       }),
       SaveButton: new Button({
         filled: true,
@@ -63,26 +60,14 @@ export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
     })
   }
 
-  validatePassword(fieldName: string, value: string) {
-    const componentName =
-      Object.entries(this.children)
-        .map(([name, component]) => ({ name, props: component.props }))
-        .find((item) => item.props.id === fieldName)?.name ?? ''
+  validateField(fieldName: string, value: string) {
+    this.props.setChangePasswordError('')
 
     const errorText = validate(fieldName, value)
-
-    if (errorText) {
-      this.children[componentName].setProps({
-        message: {
-          text: errorText,
-          type: 'error',
-        },
-      })
-    } else {
-      this.children[componentName].setProps({
-        message: {},
-      })
-    }
+    this.props.setPasswordForm({
+      errors: { ...this.props.passwordForm.errors, [fieldName]: errorText },
+      values: { ...this.props.passwordForm.values, [fieldName]: value },
+    })
   }
 
   render() {
@@ -97,3 +82,8 @@ export default class ChangePasswordForm extends Block<ChangePasswordFormProps> {
     `
   }
 }
+
+export default connect(({ passwordForm, changePasswordError }) => ({ passwordForm, changePasswordError }), {
+  setPasswordForm: (dispatch, value) => dispatch({ passwordForm: value }),
+  setChangePasswordError: (dispatch, value) => dispatch({ changePasswordError: value }),
+})(ChangePasswordForm)

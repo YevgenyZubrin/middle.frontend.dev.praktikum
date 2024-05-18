@@ -63,4 +63,14 @@ body, p {
     display: flex;
     justify-content: center;
   }
+
+  &__error,
+  &__loading {
+    padding-top: 16px;
+    text-align: center;
+  }
+  
+  &__error {
+    color: $red-10;
+  }
 }

@@ -3,7 +3,7 @@
     padding: 0;
     margin: 0;
   }
-
+  
   box-sizing: border-box;
   display: flex;
   height: 70px;
@@ -11,6 +11,7 @@
   cursor: pointer;
   border-top: 1px solid $gray-30;
   list-style: none;
+  overflow: hidden;
 
   &:last-child {
     border-bottom: 1px solid $gray-30;

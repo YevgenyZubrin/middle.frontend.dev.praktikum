@@ -1,0 +1,13 @@
+.profile-info {
+  margin-bottom: 32px;
+
+  &__line {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $gray-30;
+    }
+  }
+}

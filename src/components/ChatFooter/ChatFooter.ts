@@ -1,18 +1,12 @@
 import Block from '../../core/Block'
-import { getValidationResult } from '../../utils'
+import WSTransport from '../../core/WSTransport'
 import { FileTypeMenu } from '../FileTypeMenu'
 import { FormMessage } from '../FormMessage'
 import { IconButton } from '../IconButton'
 import { ShareFileIcon } from '../Icons'
+import { ChatFooterProps } from './interfaces'
 
-interface ChatFooterProps {
-  isShareMenuOpened?: boolean
-  ShareFileButton?: IconButton
-  FileTypeMenu?: FileTypeMenu
-  FormMessage?: FormMessage
-}
-
-export default class ChatFooter extends Block<ChatFooterProps> {
+class ChatFooter extends Block<ChatFooterProps> {
   constructor(props: ChatFooterProps) {
     super({
       ...props,
@@ -27,9 +21,12 @@ export default class ChatFooter extends Block<ChatFooterProps> {
       FormMessage: new FormMessage({
         onSubmit: (e: Event) => {
           e.preventDefault()
-          if (e.target) {
-            // eslint-disable-next-line no-console
-            console.log(getValidationResult(e.target))
+          if (e.target && e.target instanceof HTMLFormElement) {
+            const formValue = Object.fromEntries(new FormData(e.target))
+            if (formValue.message) {
+              WSTransport.sendMessage(formValue.message as string)
+              e.target.reset()
+            }
           }
         },
       }),
@@ -50,3 +47,5 @@ export default class ChatFooter extends Block<ChatFooterProps> {
     `
   }
 }
+
+export default ChatFooter

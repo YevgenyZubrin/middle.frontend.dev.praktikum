@@ -1,121 +1,111 @@
 import Block from '../../core/Block'
-import { validate } from '../../utils'
-import { Field } from '../Field'
+import { connect, validate } from '../../utils'
+import SignUpEmailField from './fields/SignUpEmailField'
+import SignUpLoginField from './fields/SignUpLoginField'
+import SignUpFirstnameField from './fields/SignUpFirstnameField'
+import SignUpSecondnameField from './fields/SignUpSecondnameField'
+import SignUpPhoneField from './fields/SignUpPhoneField'
+import SignUpPasswordField from './fields/SignUpPasswordField'
+import SignUpConfirmPasswordField from './fields/SignUpConfirmPasswordField'
+import { SignUpFieldsProps } from './interfaces'
 
-interface SignUpFieldsProps {
-  EmailField?: Field
-  LoginField?: Field
-  FirstNameField?: Field
-  SecondNameField?: Field
-  PhoneField?: Field
-  PasswordField?: Field
-  ConfirmPasswordField?: Field
-}
-
-export default class SignUpFields extends Block<SignUpFieldsProps> {
+class SignUpFields extends Block<SignUpFieldsProps> {
   constructor(props: SignUpFieldsProps) {
     super({
       ...props,
-      EmailField: new Field({
+      EmailField: new SignUpEmailField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('email', e.target.value)
+            this.validateField('email', e.target.value)
           }
         },
         id: 'email',
         labelText: 'Почта',
         type: 'text',
         disabled: false,
+        value: props.signUpForm.values.email,
       }),
-      LoginField: new Field({
+      LoginField: new SignUpLoginField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('login', e.target.value)
+            this.validateField('login', e.target.value)
           }
         },
         id: 'login',
         labelText: 'Логин',
         type: 'text',
         disabled: false,
+        value: props.signUpForm.values.login,
       }),
-      FirstNameField: new Field({
+      FirstNameField: new SignUpFirstnameField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('first_name', e.target.value)
+            this.validateField('first_name', e.target.value)
           }
         },
         id: 'first_name',
         labelText: 'Имя',
         type: 'text',
         disabled: false,
+        value: props.signUpForm.values.first_name,
       }),
-      SecondNameField: new Field({
+      SecondNameField: new SignUpSecondnameField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('second_name', e.target.value)
+            this.validateField('second_name', e.target.value)
           }
         },
         id: 'second_name',
         labelText: 'Фамилия',
         type: 'text',
         disabled: false,
+        value: props.signUpForm.values.second_name,
       }),
-      PhoneField: new Field({
+      PhoneField: new SignUpPhoneField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('phone', e.target.value)
+            this.validateField('phone', e.target.value)
           }
         },
         id: 'phone',
         labelText: 'Телефон',
         type: 'text',
         disabled: false,
+        value: props.signUpForm.values.phone,
       }),
-      PasswordField: new Field({
+      PasswordField: new SignUpPasswordField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('password', e.target.value)
+            this.validateField('password', e.target.value)
           }
         },
         id: 'password',
         labelText: 'Пароль',
         type: 'password',
         disabled: false,
+        value: props.signUpForm.values.password,
       }),
-      ConfirmPasswordField: new Field({
+      ConfirmPasswordField: new SignUpConfirmPasswordField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('confirmPassword', e.target.value)
+            this.validateField('confirmPassword', e.target.value)
           }
         },
         id: 'confirmPassword',
         labelText: 'Пароль (еще раз)',
         type: 'password',
         disabled: false,
+        value: props.signUpForm.values.confirmPassword,
       }),
     })
   }
 
-  validate(fieldName: string, value: string) {
-    const componentName =
-      Object.entries(this.children)
-        .map(([name, component]) => ({ name, props: component.props }))
-        .find((item) => item.props.id === fieldName)?.name ?? ''
-
+  validateField(fieldName: string, value: string) {
     const errorText = validate(fieldName, value)
-
-    if (errorText) {
-      this.children[componentName].setProps({
-        message: {
-          text: errorText,
-          type: 'error',
-        },
-      })
-    } else {
-      this.children[componentName].setProps({
-        message: {},
-      })
-    }
+    this.props.setSignUpForm({
+      errors: { ...this.props.signUpForm.errors, [fieldName]: errorText },
+      values: { ...this.props.signUpForm.values, [fieldName]: value },
+    })
   }
 
   render() {
@@ -132,3 +122,7 @@ export default class SignUpFields extends Block<SignUpFieldsProps> {
     `
   }
 }
+
+export default connect(({ signUpForm }) => ({ signUpForm }), {
+  setSignUpForm: (dispatch, value) => dispatch({ signUpForm: value }),
+})(SignUpFields)

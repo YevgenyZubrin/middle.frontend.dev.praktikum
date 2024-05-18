@@ -1,10 +1,8 @@
 import Block from '../../core/Block'
+import { connect } from '../../utils'
+import { MessageProps } from './interfaces'
 
-interface MessageProps {
-  type: string
-  text: string
-}
-export default class Message extends Block<MessageProps> {
+class Message extends Block<MessageProps> {
   constructor(props: MessageProps) {
     super({
       ...props,
@@ -12,10 +10,14 @@ export default class Message extends Block<MessageProps> {
   }
 
   render() {
+    const type = this.props.user.values.id === this.props.user_id ? 'out' : 'in'
+
     return `
-      <div class="message {{type}}">
-        {{text}}
+      <div class="message ${type}">
+        {{content}}
       </div>
     `
   }
 }
+
+export default connect(({ user }) => ({ user }))(Message)
