@@ -1,6 +1,7 @@
 .chat-footer {
   position: relative;
   display: flex;
+  box-sizing: border-box;
   align-items: center;
   height: 45px;
   width: 100%;
@@ -9,8 +10,8 @@
 
   &__share-button,
   &__send-button {
-    height: 32px;
-    width: 32px;
+    height: 32px !important;
+    width: 32px !important;
   }
 
   &__message-field {

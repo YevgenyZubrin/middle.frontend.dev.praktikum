@@ -1,3 +1,4 @@
+import { getErrorMessage } from '../utils'
 import Store from './Store'
 
 class WSTransport {
@@ -9,6 +10,15 @@ class WSTransport {
     this.socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${userId}/${chatId}/${chatToken}`)
 
     this.socket.addEventListener('open', () => {
+      Store.setState({ messages: [] })
+
+      this.socket?.send(
+        JSON.stringify({
+          type: 'get old',
+          content: '0',
+        }),
+      )
+
       // eslint-disable-next-line no-console
       console.log('Соединение установлено')
     })
@@ -27,8 +37,38 @@ class WSTransport {
     })
 
     this.socket.addEventListener('message', (event) => {
-      if (JSON.parse(event.data).type === 'message') {
-        Store.setState({ messages: [...Store.getState().messages, JSON.parse(event.data)] })
+      try {
+        const parsedData = JSON.parse(event.data)
+
+        const adaptDataToStore = () => {
+          if (Array.isArray(parsedData)) {
+            Store.setState({
+              messages: [
+                ...Store.getState().messages,
+                ...parsedData
+                  .sort((a, b) => {
+                    const aMilliseconds = new Date(a.time).getTime()
+                    const bMilliseconds = new Date(b.time).getTime()
+
+                    return aMilliseconds - bMilliseconds
+                  })
+                  .map((item) => ({
+                    content: item.content,
+                    type: item.type,
+                    time: item.time,
+                    user_id: item.user_id,
+                    id: item.id,
+                  })),
+              ],
+            })
+          }
+        }
+        adaptDataToStore()
+        if (parsedData.type === 'message') {
+          Store.setState({ messages: [...Store.getState().messages, parsedData] })
+        }
+      } catch (err: unknown) {
+        throw new Error(getErrorMessage(err))
       }
     })
 

@@ -125,11 +125,7 @@ class Chats extends Block<ChatsProps> {
 
   async openNewWSConnetcion(chatId: number) {
     const chatToken = await getChatToken(chatId)
-    if (!WSTransport.socket) {
-      WSTransport.openConnection(this.props.user.values.id, chatId, chatToken)
-    } else {
-      WSTransport.openConnection(this.props.user.values.id, chatId, chatToken)
-    }
+    WSTransport.openConnection(this.props.user.values.id, chatId, chatToken)
   }
 
   componentDidUpdate(oldProps: AnyProps, newProps: AnyProps): boolean {
@@ -142,7 +138,7 @@ class Chats extends Block<ChatsProps> {
     if (oldProps.isDeleteUserToChatModalOpen !== newProps.isDeleteUserToChatModalOpen) {
       this.children.RemoveUserModal.setProps({ isOpen: newProps.isDeleteUserToChatModalOpen })
     }
-    if (!oldProps.activeChat && newProps.activeChat) {
+    if (oldProps?.activeChat !== newProps.activeChat) {
       this.openNewWSConnetcion(newProps.activeChat.id)
     }
     return true
@@ -200,6 +196,7 @@ export default connect(
     addOrDeleteUserForm,
     isAddUserToChatModalOpen,
     isDeleteUserToChatModalOpen,
+    messages,
   }) => ({
     user,
     chatToken,
@@ -209,6 +206,7 @@ export default connect(
     addOrDeleteUserForm,
     isAddUserToChatModalOpen,
     isDeleteUserToChatModalOpen,
+    messages,
   }),
   {
     setIsCreateChatModalOpen: (dispatch, value) => dispatch({ isCreateChatModalOpen: value }),
@@ -216,5 +214,6 @@ export default connect(
     openCloseAddUserModal: (dispatch, value) => dispatch({ isAddUserToChatModalOpen: value }),
     openCloseDeleteUserModal: (dispatch, value) => dispatch({ isDeleteUserToChatModalOpen: value }),
     setChatToken: (dispatch, value) => dispatch({ chatToken: value }),
+    setMessages: (dispatch, value) => dispatch({ messages: value }),
   },
 )(Chats)

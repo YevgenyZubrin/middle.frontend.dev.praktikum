@@ -1,10 +1,6 @@
 import Block from '../../core/Block'
-import { IMessagesPerDay } from '../../core/types'
-import { TypographyProps } from '../Typography/interfaces'
+import { MessageProps } from '../Message/interfaces'
 
 export interface MessagesPerDayProps {
-  Date: Block<TypographyProps>
-  messagesPerDayKeys: string[]
-  date: string
-  messagesPerDay: IMessagesPerDay[]
+  messageList: Block<MessageProps>[]
 }
