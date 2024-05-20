@@ -1,10 +1,5 @@
 import Block from '../../core/Block'
-
-interface ErrorBlockProps {
-  errorCode: string
-  errorDescription: string
-  backLinkText: string
-}
+import { ErrorBlockProps } from './interfaces'
 
 export default class ErrorBlock extends Block<ErrorBlockProps> {
   constructor(props: ErrorBlockProps) {

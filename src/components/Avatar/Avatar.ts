@@ -1,12 +1,9 @@
 import Block from '../../core/Block'
+import { connect } from '../../utils'
 import { Button } from '../Button'
+import { AvatarProps } from './interfaces'
 
-interface AvatarProps {
-  Button?: Button
-  changeAvatar: () => void
-}
-
-export default class Avatar extends Block<AvatarProps> {
+class Avatar extends Block<AvatarProps> {
   constructor(props: AvatarProps) {
     super({
       ...props,
@@ -22,9 +19,14 @@ export default class Avatar extends Block<AvatarProps> {
 
   render() {
     return `
-      <div class="avatar">
+      <div class='avatar'>
+        {{#if user.values.avatar}}
+          <img class='avatar__image' src='{{user.values.avatar}}' alt='avatar' />
+        {{/if}}
         {{{ Button }}}
       </div>
     `
   }
 }
+
+export default connect(({ user }) => ({ user }))(Avatar)

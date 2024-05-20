@@ -33,7 +33,6 @@ const validate = (fieldName: string, value: string): string => {
     }
     default:
   }
-
   // TODO: сделать информативные ошибки, пока пропускаю по причине нехватки времени
   return isValid ? '' : 'Некорректные данные'
 }

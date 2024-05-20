@@ -1,23 +1,13 @@
 import Block from '../../core/Block'
+import { connect, getImageUrl } from '../../utils'
 import { ChatImage } from '../ChatImage'
 import { IconButton } from '../IconButton'
 import { MenuIcon } from '../Icons'
 import { Typography } from '../Typography'
 import { UserActionsMenu } from '../UserActionsMenu'
+import { ChatHeaderProps } from './interfaces'
 
-interface ChatHeaderProps {
-  imgUrl: string
-  nickname: string
-  isUserActionMenuOpen?: boolean
-  ChatImage?: ChatImage
-  ChatName?: Typography
-  MenuButton?: IconButton
-  UserActionsMenu?: UserActionsMenu
-  onAddUserModalOpen?: () => void
-  onRemoveUserModalOpen?: () => void
-}
-
-export default class ChatHeader extends Block<ChatHeaderProps> {
+class ChatHeader extends Block<ChatHeaderProps> {
   constructor(props: ChatHeaderProps) {
     super({
       ...props,
@@ -25,19 +15,26 @@ export default class ChatHeader extends Block<ChatHeaderProps> {
         imgUrl: props.imgUrl,
         className: 'chat-header__image',
       }),
-      ChatName: new Typography({ text: props.nickname }),
+      ChatName: new Typography({ text: props.activeChat?.title }),
       MenuButton: new IconButton({
         icon: new MenuIcon({}),
         className: 'chat-header__menu',
         onClick: () => {
-          this.setProps({ isUserActionMenuOpen: !this.props.isUserActionMenuOpen })
+          this.props.setIsUserActionMenuOpen(true)
         },
       }),
-      UserActionsMenu: new UserActionsMenu({
-        onAddUserModalOpen: props.onAddUserModalOpen,
-        onRemoveUserModalOpen: props.onRemoveUserModalOpen,
-      }),
+      UserActionsMenu: new UserActionsMenu({}),
     })
+  }
+
+  componentDidUpdate(oldProps: Partial<ChatHeaderProps>, newProps: Partial<ChatHeaderProps>): boolean {
+    if (oldProps.activeChat?.title !== newProps.activeChat?.title) {
+      this.children.ChatName.setProps({ text: newProps.activeChat?.title })
+    }
+    if (oldProps.activeChat?.avatar !== newProps.activeChat?.avatar) {
+      this.children.ChatImage.setProps({ text: getImageUrl(newProps.activeChat?.avatar ?? '') })
+    }
+    return true
   }
 
   render() {
@@ -59,3 +56,7 @@ export default class ChatHeader extends Block<ChatHeaderProps> {
     `
   }
 }
+
+export default connect(({ activeChat, isUserActionMenuOpen }) => ({ activeChat, isUserActionMenuOpen }), {
+  setIsUserActionMenuOpen: (dispatch, value) => dispatch({ isUserActionMenuOpen: value }),
+})(ChatHeader)

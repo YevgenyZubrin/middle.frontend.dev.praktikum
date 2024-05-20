@@ -1,3 +1,3 @@
-import './Chats.scss'
+import './ChatsPage.scss'
 
-export { default as ChatsPage } from './Chats'
+export { default as ChatsPage } from './ChatsPage'

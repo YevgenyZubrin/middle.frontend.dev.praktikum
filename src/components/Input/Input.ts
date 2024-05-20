@@ -1,21 +1,13 @@
 import Block from '../../core/Block'
+import { InputProps } from './interfaces'
 
-interface InputProps {
-  className?: string
-  id: string
-  type: string
-  disabled?: boolean
-  placeholder?: string
-  events?: { blur: (e: Event) => void }
-  onBlur?: (e: Event) => void
-}
-
-export default class Input extends Block<InputProps> {
+class Input extends Block<InputProps> {
   constructor(props: InputProps) {
     super({
       ...props,
       events: {
         blur: props.onBlur || (() => {}),
+        change: props.onChange || (() => {}),
       },
     })
   }
@@ -23,13 +15,16 @@ export default class Input extends Block<InputProps> {
   render() {
     return `
       <input 
-        class={{className}}
-        id={{id}} 
-        name={{id}} 
-        type={{type}} 
+        class='{{className}}'
+        id='{{id}}' 
+        name='{{id}}' 
+        type='{{type}}' 
+        value='{{value}}'
         {{#if disabled}}disabled{{/if}} 
-        {{#if placeholder}}placeholder={{placeholder}}{{/if}}  
+        {{#if placeholder}}placeholder={{placeholder}}{{/if}}
       />
     `
   }
 }
+
+export default Input

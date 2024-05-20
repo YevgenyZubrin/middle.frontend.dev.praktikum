@@ -1,16 +1,13 @@
 import Block from '../../core/Block'
-
-interface ModalProps {
-  overlayClassName?: string
-  isOpen: boolean
-  className?: string
-  modalChildren: Block
-}
+import { ModalProps } from './interfaces'
 
 export default class Modal extends Block<ModalProps> {
   constructor(props: ModalProps) {
     super({
       ...props,
+      events: {
+        click: props.closeModal || (() => {}),
+      },
     })
   }
 

@@ -1,25 +1,21 @@
 import Block from '../../core/Block'
-import { getName, validate } from '../../utils'
-import { Field } from '../Field'
+import { connect, validate } from '../../utils'
+import DisplayNameField from './fields/DisplayNameField'
+import EmailField from './fields/EmailField'
+import FirstNameField from './fields/FirstNameField'
+import LoginField from './fields/LoginField'
+import PhoneField from './fields/PhoneField'
+import SecondNameField from './fields/SecondNameField'
+import { ProfileFieldsProps } from './interfaces'
 
-interface ProfileFieldsProps {
-  EmailField?: Field
-  LoginField?: Field
-  FirstNameField?: Field
-  SecondNameField?: Field
-  DisplayNameField?: Field
-  PhoneField?: Field
-  editProfileMode?: boolean
-}
-
-export default class ProfileFields extends Block<ProfileFieldsProps> {
+class ProfileFields extends Block<ProfileFieldsProps> {
   constructor(props: ProfileFieldsProps) {
     super({
       ...props,
-      EmailField: new Field({
+      EmailField: new EmailField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('email', e.target.value)
+            this.validateField('email', e.target.value)
           }
         },
         id: 'email',
@@ -27,11 +23,12 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.email,
       }),
-      LoginField: new Field({
+      LoginField: new LoginField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('login', e.target.value)
+            this.validateField('login', e.target.value)
           }
         },
         id: 'login',
@@ -39,11 +36,12 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.login,
       }),
-      FirstNameField: new Field({
+      FirstNameField: new FirstNameField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('first_name', e.target.value)
+            this.validateField('first_name', e.target.value)
           }
         },
         id: 'first_name',
@@ -51,11 +49,12 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.first_name,
       }),
-      SecondNameField: new Field({
+      SecondNameField: new SecondNameField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('second_name', e.target.value)
+            this.validateField('second_name', e.target.value)
           }
         },
         id: 'second_name',
@@ -63,11 +62,12 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.second_name,
       }),
-      DisplayNameField: new Field({
+      DisplayNameField: new DisplayNameField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('display_name', e.target.value)
+            this.validateField('display_name', e.target.value)
           }
         },
         id: 'display_name',
@@ -75,11 +75,12 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.display_name,
       }),
-      PhoneField: new Field({
+      PhoneField: new PhoneField({
         onBlur: (e: Event) => {
           if (e.target instanceof HTMLInputElement) {
-            this.validate('phone', e.target.value)
+            this.validateField('phone', e.target.value)
           }
         },
         id: 'phone',
@@ -87,28 +88,19 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
         type: 'text',
         disabled: false,
         isProfile: true,
+        value: props.user.values.phone,
       }),
     })
   }
 
-  validate(fieldName: string, value: string) {
-    const componentName = getName(this.children, fieldName)
+  validateField(fieldName: string, value: string) {
+    this.props.setChangeProfileError('')
 
-    if (this.props.editProfileMode) {
-      const errorText = validate(fieldName, value)
-      if (errorText) {
-        this.children[componentName].setProps({
-          message: {
-            text: errorText,
-            type: 'error',
-          },
-        })
-      } else {
-        this.children[componentName].setProps({
-          message: {},
-        })
-      }
-    }
+    const errorText = validate(fieldName, value)
+    this.props.setUser({
+      errors: { ...this.props.user.errors, [fieldName]: errorText },
+      values: { ...this.props.user.values, [fieldName]: value },
+    })
   }
 
   render() {
@@ -124,3 +116,8 @@ export default class ProfileFields extends Block<ProfileFieldsProps> {
     `
   }
 }
+
+export default connect(({ user, changeProfileError }) => ({ user, changeProfileError }), {
+  setUser: (dispatch, value) => dispatch({ user: value }),
+  setChangeProfileError: (dispatch, value) => dispatch({ changeProfileError: value }),
+})(ProfileFields)

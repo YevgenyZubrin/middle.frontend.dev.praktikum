@@ -1,11 +1,13 @@
 import Handlebars from 'handlebars'
 import { nanoid } from 'nanoid'
 import EventBus from './EventBus'
+import { isEqual } from '../utils'
 
-const liveCycleEvents = {
+export const liveCycleEvents = {
   INIT: 'init',
   FLOW_CDM: 'flow:component-did-mount',
   FLOW_CDU: 'flow:component-did-update',
+  FLOW_CWU: 'flow:component-will-unmount',
   FLOW_RENDER: 'flow:render',
 } as const
 
@@ -21,11 +23,11 @@ type TEventTypes = Values<typeof eventTypes>
 type Tevents = { [key in TEventTypes]: () => void }
 type TProps = {
   events?: Tevents
-} & Record<string, any>
+} & AnyProps
 
 // использую any потому что пропсы погут быть любыми
 
-export default class Block<Props extends Record<string, any> = Record<string, any>> {
+export default class Block<Props extends AnyProps = AnyProps> {
   private _element: Element | null = null
 
   children: TProps = {}
@@ -79,6 +81,7 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     eventBus.on(liveCycleEvents.INIT, this._init.bind(this))
     eventBus.on(liveCycleEvents.FLOW_CDM, this._componentDidMount.bind(this))
     eventBus.on(liveCycleEvents.FLOW_CDU, this._componentDidUpdate.bind(this))
+    eventBus.on(liveCycleEvents.FLOW_CWU, this._componentWillUnmount.bind(this))
     eventBus.on(liveCycleEvents.FLOW_RENDER, this._render.bind(this))
   }
 
@@ -88,10 +91,10 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     this.eventBus().emit(liveCycleEvents.FLOW_RENDER)
   }
 
-  // eslint-disable-next-line class-methods-use-this
   init() {}
 
   _componentDidMount() {
+    // console.log('cdm 1123')
     this.componentDidMount()
 
     Object.values(this.children).forEach((child) => {
@@ -105,8 +108,8 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     this.eventBus().emit(liveCycleEvents.FLOW_CDM)
   }
 
-  _componentDidUpdate() {
-    const response = this.componentDidUpdate()
+  _componentDidUpdate(oldProps: AnyProps, newProps: AnyProps) {
+    const response = this.componentDidUpdate(oldProps, newProps)
     if (!response) {
       return
     }
@@ -114,15 +117,17 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     this._render()
   }
 
-  componentDidUpdate() {
-    return true
+  componentDidUpdate(oldProps: AnyProps, newProps: AnyProps): boolean {
+    if (!isEqual(oldProps, newProps)) {
+      return true
+    }
+    return false
   }
 
   dispatchComponentDidUpdate(oldTarget: TProps, newProps: TProps) {
     this.eventBus().emit(liveCycleEvents.FLOW_CDU, oldTarget, newProps)
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private getChildrenAndProps(propsAndChildren: Props) {
     const children: TProps = {}
     const props: TProps = {}
@@ -149,6 +154,27 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     return this._element
   }
 
+  _createDocumentElement(tagName: string) {
+    return document.createElement(tagName)
+  }
+
+  _checkInDom() {
+    const elementInDOM = document.body.contains(this._element)
+
+    if (elementInDOM) {
+      setTimeout(() => this._checkInDom(), 1000)
+      return
+    }
+
+    this.eventBus().emit(liveCycleEvents.FLOW_CWU, this.props)
+  }
+
+  _componentWillUnmount() {
+    this.componentWillUnmount()
+  }
+
+  componentWillUnmount() {}
+
   _render() {
     this.removeEvents()
 
@@ -157,22 +183,39 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child._id}"></div>`
     })
+    const childrenProps: Record<string, any>[] = []
+    Object.entries(propsAndStubs).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        propsAndStubs[key] = value
+          .map((item) => {
+            if (item instanceof Block) {
+              childrenProps.push(item)
+              return `<div data-id="${item._id}"></div>`
+            }
 
+            return item
+          })
+          .join('')
+      }
+    })
     const fragment = this.createDocumentElement('template') as HTMLTemplateElement
 
-    const template = Handlebars.compile(this.render())(propsAndStubs)
-
-    fragment.innerHTML = template
-
+    fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs)
     const newElement = fragment.content.firstElementChild
 
-    Object.values(this.children).forEach((child) => {
+    ;[...Object.values(this.children), ...childrenProps].forEach((child) => {
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`)
 
       stub?.replaceWith(child.getContent())
     })
 
-    if (this._element && newElement) {
+    if (
+      this._element &&
+      newElement !== null &&
+      this._element instanceof HTMLElement &&
+      newElement instanceof HTMLElement
+    ) {
+      newElement.style.display = this._element.style.display
       this._element.replaceWith(newElement)
     }
 
@@ -184,6 +227,14 @@ export default class Block<Props extends Record<string, any> = Record<string, an
   render() {}
 
   getContent() {
+    if (this.element?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+      setTimeout(() => {
+        if (this.element?.parentNode?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+          this.dispatchComponentDidMount()
+        }
+      }, 100)
+    }
+
     return this.element
   }
 
@@ -212,7 +263,6 @@ export default class Block<Props extends Record<string, any> = Record<string, an
     })
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private createDocumentElement(tagName: string): HTMLElement | HTMLTemplateElement {
     if (tagName === 'template') {
       return document.createElement(tagName) as HTMLTemplateElement

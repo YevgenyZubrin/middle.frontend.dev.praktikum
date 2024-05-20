@@ -19,6 +19,9 @@
     "prettier"
   ],
   "rules": {
+    "class-methods-use-this": "off",
+    "no-prototype-builtins": "off",
+    "no-restricted-syntax": "off",
     "implicit-arrow-linebreak": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
