@@ -15,6 +15,9 @@ npm run typecheck
 Линтинг кода
 npm run lint
 
+Запуск тестов
+npm run test
+
 Ссылка на Netlify:
 https://deploy-preview-6--darling-licorice-e036fc.netlify.app
 
