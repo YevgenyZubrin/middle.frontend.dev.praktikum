@@ -34,10 +34,12 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@types/sinon": "^17.0.3",
     "handlebars": "^4.7.8",
     "husky": "^8.0.3",
     "jsdom": "^24.0.0",
     "nanoid": "^5.0.7",
+    "sinon": "^18.0.0",
     "vite-plugin-handlebars": "^1.6.0"
   }
 }

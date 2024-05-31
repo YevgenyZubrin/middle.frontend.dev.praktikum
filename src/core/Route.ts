@@ -51,6 +51,10 @@ class Route {
 
     this._block.show()
   }
+
+  getRoutePathname() {
+    return this._pathname
+  }
 }
 
 export default Route
