@@ -1,4 +1,4 @@
-const METHODS = {
+export const METHODS = {
   GET: 'GET',
   POST: 'POST',
   PUT: 'PUT',
@@ -58,11 +58,6 @@ class HTTPTransport {
     const { data = null, headers = {}, method } = options
 
     return new Promise<string>((resolve, reject) => {
-      if (!method) {
-        reject(new Error('No method'))
-        return
-      }
-
       const xhr = new XMLHttpRequest()
       const isGet = method === METHODS.GET
 
