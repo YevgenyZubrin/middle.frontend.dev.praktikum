@@ -12,11 +12,11 @@ class Button extends Block<ButtonProps> {
   render() {
     return `
       <button class="button{{#if filled}} button_filled{{/if}} {{className}}" {{#if isDisabled}}disabled{{/if}}>
-        {{#if isLoading}}
-          {{{ Spinner }}}
-        {{else}}
-          {{text}}
+        {{#if icon}}
+          {{{ icon }}}
         {{/if}}
+        
+        {{text}}
       </button>
       `
   }

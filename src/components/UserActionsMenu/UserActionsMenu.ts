@@ -1,7 +1,8 @@
 import Block from '../../core/Block'
 import { connect, getComponentsList } from '../../utils'
-import { CrossIcon, PlusIcon } from '../Icons'
+import { CrossIcon, MediaIcon, PlusIcon } from '../Icons'
 import { IconButton } from '../IconButton'
+import { deleteChat, getChatUsers } from '../../controller/chats'
 
 interface UserActionList {
   text: string
@@ -14,12 +15,21 @@ class UserActionsMenu extends Block {
   constructor(props = {}) {
     const userActionList: UserActionList[] = [
       {
+        text: 'Изменить картинку чата',
+        icon: new MediaIcon({}),
+        className: 'user-actions-menu__button',
+        onClick: () => {
+          this.props.openCloseChangeChatAvatarModal(true)
+          this.props.setIsChatActionMenuOpen(false)
+        },
+      },
+      {
         text: 'Добавить пользователя',
         icon: new PlusIcon({}),
         className: 'user-actions-menu__button',
         onClick: () => {
           this.props.openCloseAddUserModal(true)
-          this.props.setIsUserActionMenuOpen(false)
+          this.props.setIsChatActionMenuOpen(false)
         },
       },
       {
@@ -27,8 +37,18 @@ class UserActionsMenu extends Block {
         icon: new CrossIcon({}),
         className: 'user-actions-menu__button',
         onClick: () => {
+          getChatUsers(this.props.activeChat.id)
           this.props.openCloseDeleteUserModal(true)
-          this.props.setIsUserActionMenuOpen(false)
+          this.props.setIsChatActionMenuOpen(false)
+        },
+      },
+      {
+        text: 'Удалить чат',
+        icon: new CrossIcon({}),
+        className: 'user-actions-menu__button',
+        onClick: () => {
+          deleteChat(this.props.activeChat.id)
+          this.props.setIsChatActionMenuOpen(false)
         },
       },
     ]
@@ -52,14 +72,23 @@ class UserActionsMenu extends Block {
 }
 
 export default connect(
-  ({ isAddUserToChatModalOpen, isDeleteUserToChatModalOpen, isUserActionMenuOpen }) => ({
+  ({
     isAddUserToChatModalOpen,
     isDeleteUserToChatModalOpen,
-    isUserActionMenuOpen,
+    isChatActionMenuOpen,
+    isChangeChatAvatarModalOpen,
+    activeChat,
+  }) => ({
+    isAddUserToChatModalOpen,
+    isDeleteUserToChatModalOpen,
+    isChatActionMenuOpen,
+    isChangeChatAvatarModalOpen,
+    activeChat,
   }),
   {
     openCloseAddUserModal: (dispatch, value) => dispatch({ isAddUserToChatModalOpen: value }),
     openCloseDeleteUserModal: (dispatch, value) => dispatch({ isDeleteUserToChatModalOpen: value }),
-    setIsUserActionMenuOpen: (dispatch, value) => dispatch({ isUserActionMenuOpen: value }),
+    setIsChatActionMenuOpen: (dispatch, value) => dispatch({ isChatActionMenuOpen: value }),
+    openCloseChangeChatAvatarModal: (dispatch, value) => dispatch({ isChangeChatAvatarModalOpen: value }),
   },
 )(UserActionsMenu)

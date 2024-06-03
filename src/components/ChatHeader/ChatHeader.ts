@@ -20,7 +20,7 @@ class ChatHeader extends Block<ChatHeaderProps> {
         icon: new MenuIcon({}),
         className: 'chat-header__menu',
         onClick: () => {
-          this.props.setIsUserActionMenuOpen(true)
+          this.props.setIsChatActionMenuOpen(true)
         },
       }),
       UserActionsMenu: new UserActionsMenu({}),
@@ -49,7 +49,7 @@ class ChatHeader extends Block<ChatHeaderProps> {
           {{{ MenuButton }}}
         </div>
 
-        {{#if isUserActionMenuOpen}}
+        {{#if isChatActionMenuOpen}}
           {{{ UserActionsMenu }}}
         {{/if}}
       </div>
@@ -57,6 +57,6 @@ class ChatHeader extends Block<ChatHeaderProps> {
   }
 }
 
-export default connect(({ activeChat, isUserActionMenuOpen }) => ({ activeChat, isUserActionMenuOpen }), {
-  setIsUserActionMenuOpen: (dispatch, value) => dispatch({ isUserActionMenuOpen: value }),
+export default connect(({ activeChat, isChatActionMenuOpen }) => ({ activeChat, isChatActionMenuOpen }), {
+  setIsChatActionMenuOpen: (dispatch, value) => dispatch({ isChatActionMenuOpen: value }),
 })(ChatHeader)

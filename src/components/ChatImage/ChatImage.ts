@@ -10,10 +10,10 @@ export default class ChatImage extends Block<ChatImageProps> {
 
   render() {
     return `
-      {{#if imgUrl}}
-        <img class="image {{className}}" src={{imgUrl}} alt="avatar">
+      {{#if avatar}}
+        <img class="image {{className}}" src={{avatar}} alt="avatar">
       {{else}}
-        <span class="image {{className}}"></span>
+        <span class="image image_empty {{className}}"></span>
       {{/if}}
     `
   }

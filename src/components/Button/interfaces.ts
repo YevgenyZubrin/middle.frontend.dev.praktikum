@@ -4,4 +4,5 @@ export interface ButtonProps {
   filled?: boolean
   className?: string
   text: string
+  icon?: any
 }

@@ -1,7 +1,7 @@
 import Store from '../core/Store'
 import { ChatsApi } from '../api/chats'
 import { searchUser } from './user'
-import { getErrorMessage } from '../utils'
+import { getErrorMessage, getImageUrl } from '../utils'
 import { ChatType } from '../core/types'
 
 const chatsApi = new ChatsApi()
@@ -11,7 +11,7 @@ export const getChats = async (): Promise<ChatType[]> => {
 
   try {
     const response = await chatsApi.getChats()
-    Store.setState({ chats: response })
+    Store.setState({ chats: response.map((item) => ({ ...item, avatar: getImageUrl(item.avatar) })) })
     return response
   } catch (err) {
     return []
@@ -88,5 +88,35 @@ export const getChatToken = async (chatId: number): Promise<string> => {
     return token
   } catch {
     return ''
+  }
+}
+
+export const changeChatAvatar = async (data: FormData): Promise<void> => {
+  try {
+    await chatsApi.changeChatAvatar(data)
+    await getChats()
+    Store.setState({ avatarFileName: '' })
+  } catch {
+    Store.setState({ isChangeAvatarError: true })
+  }
+}
+
+export const deleteChat = async (chatId: string): Promise<void> => {
+  try {
+    await chatsApi.deleteChat(chatId)
+    await getChats()
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error))
+  }
+}
+
+export const getChatUsers = async (chatId: string): Promise<void> => {
+  try {
+    const response = await chatsApi.getChatUsers(chatId)
+    Store.setState({
+      chatUsers: response.filter((item) => item.id !== Store.getState().user.values.id).map((item) => item.login),
+    })
+  } catch (error: unknown) {
+    throw new Error(getErrorMessage(error))
   }
 }

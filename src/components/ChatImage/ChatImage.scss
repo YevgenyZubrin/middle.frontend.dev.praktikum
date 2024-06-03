@@ -3,9 +3,11 @@
   height: 100%;
   aspect-ratio: 1/1;
   border-radius: 100%;
-  background-color: $gray-30;
-  background-image: url('../../public/images/avatar.png');
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
+  
+  &_empty {
+    background-image: url('../../public/images/avatar.png');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
 }
