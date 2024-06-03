@@ -11,7 +11,8 @@
     "prebuild": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "test": "mocha",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lintStaged": "lint-staged"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
@@ -24,6 +25,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "express": "^4.18.2",
+    "lint-staged": "^15.2.5",
     "mocha": "^10.4.0",
     "prettier": "^3.2.5",
     "sass": "^1.69.5",
