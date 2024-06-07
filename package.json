@@ -33,7 +33,7 @@
     "stylelint-config-standard-scss": "^8.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "vite": "^4.4.5"
+    "vite": "^5.2.13"
   },
   "dependencies": {
     "@types/sinon": "^17.0.3",
@@ -42,6 +42,7 @@
     "jsdom": "^24.0.0",
     "nanoid": "^5.0.7",
     "sinon": "^18.0.0",
-    "vite-plugin-handlebars": "^1.6.0"
+    "vite-plugin-handlebars": "^1.6.0",
+    "vite-plugin-static-copy": "^1.0.5"
   }
 }

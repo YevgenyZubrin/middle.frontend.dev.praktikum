@@ -19,7 +19,7 @@ export default class BackLink extends Block<BackLinkProps> {
   render() {
     return `
       <div class="back-link">
-        {{{ BackIcon }}}
+        <img src="/images/svg/back.svg" alt="назад">
       </div>
     `
   }
