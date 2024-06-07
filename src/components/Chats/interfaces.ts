@@ -20,4 +20,5 @@ export interface ChatsProps {
   MessagesBlock?: Block<MessagesBlockProps>
   isAddUserToChatModalOpen: boolean
   isDeleteUserToChatModalOpen: boolean
+  Modal?: Block<ModalProps>
 }

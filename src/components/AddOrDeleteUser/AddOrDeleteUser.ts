@@ -33,6 +33,10 @@ class AddOrDeleteUser extends Block<AddOrDeleteUserProps> {
         className: 'add-or-delete-user__title',
         text: props.isAddUser ? 'Добавить пользователя' : 'Удалить пользователя',
       }),
+      UserListTitle: new Typography({
+        className: 'add-or-delete-user__users-list-title',
+        text: 'Пользователи для удаления:',
+      }),
     })
   }
 
@@ -45,16 +49,29 @@ class AddOrDeleteUser extends Block<AddOrDeleteUserProps> {
   }
 
   render() {
+    const usersList = (this.props.chatUsers as string[]).map((item) => `<li>${item}</li>`).join('')
+
     return `
-      <form class="add-or-delete-user">
-        {{{ Title }}}
-        {{{ LoginField }}}
-        {{{ Button }}}
-      </form>
+      <div class="add-or-delete-user">
+        <form>
+          {{{ Title }}}
+          {{{ LoginField }}}
+          {{{ Button }}}
+        </form>
+
+        {{#unless isAddUser}}
+          <div>
+            {{{ UserListTitle }}}
+            <ul class='add-or-delete-user__users-list'>
+              ${usersList}
+            </ul>
+          </div>
+        {{/unless}}
+      </div>
     `
   }
 }
 
-export default connect(({ addOrDeleteUserForm }) => ({ addOrDeleteUserForm }), {
+export default connect(({ addOrDeleteUserForm, chatUsers, user }) => ({ addOrDeleteUserForm, chatUsers, user }), {
   setAddOrDeletUserForm: (dispatch, value) => dispatch({ addOrDeleteUserForm: value }),
 })(AddOrDeleteUser)

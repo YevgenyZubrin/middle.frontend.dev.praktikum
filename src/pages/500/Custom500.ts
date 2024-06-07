@@ -1,12 +1,9 @@
 import Block from '../../core/Block'
 import { ErrorBlock } from '../../components'
+import { CustomErrorProps } from '../404/interfaces'
 
-interface Custom500Props {
-  ErrorBlock: Block
-}
-
-export default class Custom500 extends Block<Custom500Props> {
-  constructor(props: Custom500Props) {
+export default class Custom500 extends Block<CustomErrorProps> {
+  constructor(props?: CustomErrorProps) {
     super({
       ...props,
       ErrorBlock: new ErrorBlock({

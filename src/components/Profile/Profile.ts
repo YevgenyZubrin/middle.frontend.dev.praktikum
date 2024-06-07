@@ -62,6 +62,7 @@ class Profile extends Block<ProfileProps> {
             if (this.props.avatarFileName && e.target instanceof HTMLFormElement) {
               const formData = new FormData(e.target)
               changeAvatar(formData)
+              e.target.reset()
             } else {
               this.props.setIsChooseFileErrore(true)
             }

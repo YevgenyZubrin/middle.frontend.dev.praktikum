@@ -1,8 +1,8 @@
 import Block from '../../core/Block'
 import { getComponentsList } from '../../utils'
 import { FileIcon, LocationIcon, MediaIcon } from '../Icons'
-import { IconButton } from '../IconButton'
 import { FileTypeList } from './interfaces'
+import { Button } from '../Button'
 
 export default class FileTypeMenu extends Block {
   constructor(props = {}) {
@@ -24,7 +24,7 @@ export default class FileTypeMenu extends Block {
       },
     ]
 
-    const buttonList = getComponentsList<FileTypeList>(fileTypeList, IconButton)
+    const buttonList = getComponentsList<FileTypeList>(fileTypeList, Button)
 
     super({
       ...props,

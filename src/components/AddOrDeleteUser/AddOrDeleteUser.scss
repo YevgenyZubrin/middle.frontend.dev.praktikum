@@ -13,4 +13,15 @@
   &__input {
     margin-bottom: 24px;
   }
+
+  &__users-list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  &__users-list-title {
+    padding-top: 16px;
+    margin-bottom: 8px;
+  }
 }

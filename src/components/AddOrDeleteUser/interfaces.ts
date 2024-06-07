@@ -14,4 +14,5 @@ export interface AddOrDeleteUserProps {
     submit: (e: Event) => void
   }
   onSubmit?: (e: Event) => void
+  UserListTitle?: Block<TypographyProps>
 }

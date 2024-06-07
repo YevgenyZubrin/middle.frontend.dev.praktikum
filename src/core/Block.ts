@@ -94,7 +94,6 @@ export default class Block<Props extends AnyProps = AnyProps> {
   init() {}
 
   _componentDidMount() {
-    // console.log('cdm 1123')
     this.componentDidMount()
 
     Object.values(this.children).forEach((child) => {

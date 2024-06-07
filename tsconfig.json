@@ -16,7 +16,13 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": "/"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

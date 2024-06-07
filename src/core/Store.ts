@@ -82,13 +82,15 @@ class Store extends EventBus<keyof typeof StoreEvents> {
       addOrDeleteUserForm: defaultAddOrDeleteUserForm,
       isAddUserToChatModalOpen: false,
       isDeleteUserToChatModalOpen: false,
-      isUserActionMenuOpen: false,
+      isChatActionMenuOpen: false,
       chatToken: '',
       messages: [],
       signUpError: '',
       loginError: '',
       changeProfileError: '',
       changePasswordError: '',
+      isChangeChatAvatarModalOpen: false,
+      chatUsers: [],
     }
   }
 

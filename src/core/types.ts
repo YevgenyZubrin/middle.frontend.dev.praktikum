@@ -87,13 +87,15 @@ export type StateType = {
   addOrDeleteUserForm: AddOrDeleteUserFormType
   isAddUserToChatModalOpen: boolean
   isDeleteUserToChatModalOpen: boolean
-  isUserActionMenuOpen: boolean
+  isChatActionMenuOpen: boolean
   chatToken: string
   messages: MessageType[]
   signUpError: string
   loginError: string
   changeProfileError: string
   changePasswordError: string
+  isChangeChatAvatarModalOpen: boolean
+  chatUsers: string[]
 }
 
 export interface IMessagesPerDay {

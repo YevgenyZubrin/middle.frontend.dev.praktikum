@@ -1,6 +1,7 @@
 .file-type-menu {
   &__list {
     position: absolute;
+    width: max-content;
     z-index: 10;
     top: -120px;
     box-sizing: border-box;
@@ -17,6 +18,15 @@
     height: 22px;
     font-size: 12px;
     line-height: 14px;
+    color: $black;
+
+    &:hover {
+      color: $black;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
   }
   
   &__button:not(:last-child) {

@@ -7,11 +7,12 @@ import { AddOrDeleteUser } from '../AddOrDeleteUser'
 import { MessagesBlock } from '../MessagesBlock'
 import Router from '../../core/Router'
 import { CreateChat } from '../CreateChat'
-import { addUserToChat, createChat, deleteUserFromChat, getChatToken } from '../../controller/chats'
+import { addUserToChat, changeChatAvatar, createChat, deleteUserFromChat, getChatToken } from '../../controller/chats'
 import WSTransport from '../../core/WSTransport'
 import { ChatHeader } from '../ChatHeader'
 import { ChatsProps } from './interfaces'
 import { AddOrDeleteUserFormType } from '../../core/types'
+import { ChangeAvatarModal } from '../ChangeAvatarModal'
 
 class Chats extends Block<ChatsProps> {
   constructor(props: ChatsProps) {
@@ -90,6 +91,30 @@ class Chats extends Block<ChatsProps> {
         },
       }),
       MessagesBlock: new MessagesBlock({ messages: [] }),
+      Modal: new Modal({
+        isOpen: false,
+        closeModal: (e: Event) => {
+          if (e.target instanceof HTMLElement && e.target?.classList.value.match('modal__overlay')) {
+            this.children.Modal.setProps({ isOpen: false })
+          }
+        },
+        modalChildren: new ChangeAvatarModal({
+          choosedFileName: '',
+          isFileLoadError: false,
+          onSubmit: (e: Event) => {
+            e.preventDefault()
+            if (this.props.avatarFileName && e.target instanceof HTMLFormElement) {
+              const formData = new FormData(e.target)
+              formData.append('chatId', this.props.activeChat.id)
+              changeChatAvatar(formData)
+              e.target.reset()
+            } else {
+              this.props.setIsChooseFileErrore(true)
+            }
+          },
+        }),
+        className: 'profile__modal',
+      }),
     })
   }
 
@@ -141,6 +166,9 @@ class Chats extends Block<ChatsProps> {
     if (oldProps?.activeChat !== newProps.activeChat) {
       this.openNewWSConnetcion(newProps.activeChat.id)
     }
+    if (oldProps.isChangeChatAvatarModalOpen !== newProps.isChangeChatAvatarModalOpen) {
+      this.children.Modal.setProps({ isOpen: true })
+    }
     return true
   }
 
@@ -181,6 +209,8 @@ class Chats extends Block<ChatsProps> {
         {{{ RemoveUserModal }}}
         {{{ CreateChatModal }}}
 
+        {{{ Modal }}}
+
       </section>
     `
   }
@@ -197,6 +227,9 @@ export default connect(
     isAddUserToChatModalOpen,
     isDeleteUserToChatModalOpen,
     messages,
+    isChangeChatAvatarModalOpen,
+    isChooseFileError,
+    avatarFileName,
   }) => ({
     user,
     chatToken,
@@ -207,6 +240,9 @@ export default connect(
     isAddUserToChatModalOpen,
     isDeleteUserToChatModalOpen,
     messages,
+    isChangeChatAvatarModalOpen,
+    isChooseFileError,
+    avatarFileName,
   }),
   {
     setIsCreateChatModalOpen: (dispatch, value) => dispatch({ isCreateChatModalOpen: value }),
@@ -215,5 +251,6 @@ export default connect(
     openCloseDeleteUserModal: (dispatch, value) => dispatch({ isDeleteUserToChatModalOpen: value }),
     setChatToken: (dispatch, value) => dispatch({ chatToken: value }),
     setMessages: (dispatch, value) => dispatch({ messages: value }),
+    setIsChooseFileErrore: (dispatch, value) => dispatch({ isChooseFileError: value }),
   },
 )(Chats)

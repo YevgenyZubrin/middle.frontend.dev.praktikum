@@ -4,7 +4,7 @@ import Store from './Store'
 class WSTransport {
   socket: WebSocket | null = null
 
-  interval: number = 0
+  interval: NodeJS.Timeout | null = null
 
   openConnection(userId: number, chatId: number, chatToken: string) {
     this.socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${userId}/${chatId}/${chatToken}`)
@@ -100,7 +100,9 @@ class WSTransport {
 
     Store.setState({ messages: [] })
 
-    clearInterval(this.interval)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 }
 

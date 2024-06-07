@@ -7,7 +7,7 @@ import { TypographyProps } from '../Typography/interfaces'
 export interface ChatHeaderProps {
   imgUrl: string
   nickname: string
-  isUserActionMenuOpen?: boolean
+  isChatActionMenuOpen?: boolean
   ChatImage?: Block<ChatImageProps>
   ChatName?: Block<TypographyProps>
   MenuButton?: IconButton

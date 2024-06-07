@@ -42,10 +42,6 @@ class ChatsPage extends Block<ChatsPageProps> {
 
   onChatClick(chat: ChatType) {
     this.props.setActiveChat(chat)
-
-    // if (chat.last_message?.content) {
-
-    // }
   }
 
   mapChatToComponent(chats: ChatType[], hundler: (chat: ChatType) => void) {
